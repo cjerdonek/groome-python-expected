@@ -8,4 +8,4 @@ def run(values):
     TODO:
 
     """
-    return "made pizza: %s" % " ".join(values)
+    return "input: %s" % repr(values)

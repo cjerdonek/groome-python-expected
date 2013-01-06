@@ -24,7 +24,7 @@ def main(sys_argv=None, from_source=False, **kwargs):
     if sys_argv is None:
         sys_argv = sys.argv
     ns = argparsing.parse_args(sys_argv)
-    values = ns.args or ['plain']
+    values = ns.args
     result = pizza.run(values)
     print(result)
     sys.exit(0)
