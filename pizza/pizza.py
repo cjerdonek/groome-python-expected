@@ -3,9 +3,9 @@
 # Copyright (C) 2012 Mustachioed Maven.
 
 
-def run(text):
+def run(values):
     """
     TODO:
 
     """
-    return "made pizza: %s" % text
+    return "made pizza: %s" % " ".join(values)

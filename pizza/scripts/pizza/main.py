@@ -8,7 +8,7 @@ from __future__ import absolute_import
 import sys
 
 from pizza import pizza
-
+from pizza.scripts.pizza import argparsing
 
 # TODO: create an inner function that returns the exit status code.
 # TODO: accept ingredients via the command-line.
@@ -23,6 +23,8 @@ def main(sys_argv=None, from_source=False, **kwargs):
     """
     if sys_argv is None:
         sys_argv = sys.argv
-    result = pizza.run("ingredients")
+    ns = argparsing.parse_args(sys_argv)
+    values = ns.args or ['plain']
+    result = pizza.run(values)
     print(result)
     sys.exit(0)
