@@ -2,14 +2,10 @@
 # Project auto-generated at: ...
 # Copyright (C) 2012 Mustachioed Maven.
 
-import os
 
-import pystache
-
-# TODO:
-def run(sys_argv):
+def run(text):
     """
     TODO:
 
     """
-    print("Output...")
+    return "made pizza: %s" % text
