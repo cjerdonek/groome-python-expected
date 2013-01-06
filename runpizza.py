@@ -4,7 +4,7 @@
 
 import sys
 
-from hello.main import run
+from pizza.main import run
 
 def main():
     run(sys.argv)
