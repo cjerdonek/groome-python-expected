@@ -10,8 +10,17 @@ import sys
 from pizza import pizza
 from pizza.scripts.pizza import argparsing
 
-# TODO: create an inner function that returns the exit status code.
-# TODO: accept ingredients via the command-line.
+def main_inner(sys_argv=None):
+    """Run the program and return the status code."""
+    if sys_argv is None:
+        sys_argv = sys.argv
+    ns = argparsing.parse_args(sys_argv)
+    values = ns.args
+    result = pizza.run(values)
+    print(result)
+    # TODO: return the right status code as appropriate.
+    return 0
+
 def main(sys_argv=None, from_source=False, **kwargs):
     """
     Arguments:
@@ -21,10 +30,5 @@ def main(sys_argv=None, from_source=False, **kwargs):
         `python -m molt.scripts.molt`).
 
     """
-    if sys_argv is None:
-        sys_argv = sys.argv
-    ns = argparsing.parse_args(sys_argv)
-    values = ns.args
-    result = pizza.run(values)
-    print(result)
-    sys.exit(0)
+    status = main_inner(sys_argv)
+    sys.exit(status)
