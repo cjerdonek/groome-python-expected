@@ -15,12 +15,13 @@ from pizza.scripts.pizza.general.optionparser import (
     Option, ArgParser, UsageError)
 
 
+METAVAR_ARG_VALUE = 'VALUE'
 METAVAR_INPUT_DIR = 'DIRECTORY'
 
 FLAGS_CHECK_EXPECTED = Option(('--check-output', ))
 FLAGS_HELP = Option(('-h', '--help'))
 FLAGS_LICENSE = Option(('--license', ))
-FLAGS_MODE_TESTS = Option(('--run-tests', ))
+FLAGS_MODE_TESTS = Option(('-T', '--run-tests', ))
 FLAGS_SOURCE_DIR = Option(('--dev-source-dir', ))
 FLAGS_VERBOSE = Option(('-v', '--verbose'))
 
@@ -65,10 +66,10 @@ HELP_STRINGS = {
 zero more input values.
 """,
     FLAGS_MODE_TESTS: """\
-run project tests.  Tests include unit tests and doctests.  If %(metavar)s
+run project tests.  Tests include unit tests and doctests.  If %s
 arguments are provided, then only tests whose names begin with one of the
 strings are run.  Test names begin with the fully qualified module name.
-""",
+""" % METAVAR_ARG_VALUE,
     FLAGS_HELP: """\
 show this help message and exit.
 """,
@@ -140,9 +141,9 @@ def _create_parser(suppress_help_exit=False):
 
     # TODO: incorporate the METAVAR names into the help messages, as appropriate.
     # TODO: fix the help message.
-    add_arg('args', metavar='VALUE', nargs='*')
+    add_arg('args', metavar=METAVAR_ARG_VALUE, nargs='*')
     # Defaults to the empty list if provided with no names, or else None.
-    add_arg(FLAGS_MODE_TESTS, metavar='NAME', dest='test_names', nargs='*')
+    add_arg(FLAGS_MODE_TESTS, dest='run_tests', action='store_true')
     # This argument is the path to a source checkout or source distribution.
     # This lets one specify project resources not available in a package
     # build or install, when doing development testing.  Defaults to no
