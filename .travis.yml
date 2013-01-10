@@ -1,0 +1,11 @@
+language: python
+
+python:
+  - '2.7'
+  # TODO: add 3.2, PyPy, etc.
+
+script:
+  - python setup.py install
+  # The working directory for Travis when running scripts is the project
+  # source directory.
+  - pizza --run-tests
