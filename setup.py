@@ -7,8 +7,17 @@
 #  * entry_points
 #  * install_requires
 #
-import setuptools as dist
-setup = dist.setup
+
+import sys
+
+# TODO: make this code consistent with both Distribute and distutils.
+from distutils.core import setup
+from distutils.command.register import register as _register
+from distutils.command.upload import upload as _upload
+
+#import setuptools as dist
+#setup = dist.setup
+
 
 PACKAGES = [
     'pizza',
@@ -21,9 +30,33 @@ PACKAGES = [
     'pizza.test.pizza',
 ]
 
+def prompt(command):
+    command_name = command.get_command_name()
+    # The repository attribute is the URL.
+    answer = raw_input("Are you sure you want to %s to %s (yes/no)? " %
+                       (command_name, command.repository))
+    if answer != "yes":
+        sys.exit("aborted: %s" % command_name)
+
+# Subclass so we can prompt before writing to PyPI.
+class upload(_upload):
+    def run(self):
+        prompt(self)
+        super(upload, self).run()
+
+# Subclass so we can prompt before writing to PyPI.
+class register(_register):
+    # We override post_to_server() instead of run() because finalize_options()
+    # and self._set_config() are called at the beginning of run().
+    def post_to_server(self, data, auth=None):
+        prompt(self)
+        super(register, self).post_to_server(data, auth=auth)
+
 setup(name='Pizza',
+      cmdclass = {'register': register, 'upload': upload},
 #      install_requires=INSTALL_REQUIRES,
       packages=PACKAGES,
+      long_description='testing...',
 #      package_data=package_data,
       entry_points = {
         'console_scripts': [
