@@ -42,7 +42,7 @@ def prompt(command):
 class upload(_upload):
     def run(self):
         prompt(self)
-        super(upload, self).run()
+        return _upload.run(self)
 
 # Subclass so we can prompt before writing to PyPI.
 class register(_register):
@@ -50,7 +50,7 @@ class register(_register):
     # and self._set_config() are called at the beginning of run().
     def post_to_server(self, data, auth=None):
         prompt(self)
-        super(register, self).post_to_server(data, auth=auth)
+        return _register.post_to_server(self, data, auth=auth)
 
 setup(name='Pizza',
       cmdclass = {'register': register, 'upload': upload},
