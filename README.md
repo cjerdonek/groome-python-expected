@@ -13,8 +13,8 @@ Pizza
 <!-- Also compare with the image markup used in the Molt project README. -->
 [![Build Status](https://travis-ci.org/cjerdonek/groome-python-expected.png)](https://travis-ci.org/cjerdonek/groome-python-expected)
 
-This is a working skeleton project to show what you get when you render
-the [Groome](http://cjerdonek.github.com/groome) template
+This is the working skeleton project you get when you render the
+[Groome](http://cjerdonek.github.com/groome) template
 [groome-python](https://github.com/cjerdonek/groome-python) with its
 sample configuration file.
 
