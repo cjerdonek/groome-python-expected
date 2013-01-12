@@ -1,5 +1,11 @@
 # coding: utf-8
 
+"""
+
+
+"""
+
+
 # We use setuptools/Distribute because distutils does not seem to support
 # the following arguments to setUp().  Passing these arguments to
 # setUp() causes a UserWarning to be displayed.
@@ -10,13 +16,14 @@
 
 import sys
 
-# TODO: make this code consistent with both Distribute and distutils.
-from distutils.core import setup
-from distutils.command.register import register as _register
-from distutils.command.upload import upload as _upload
+import setuptools as setuptools
+from setuptools.command.register import register as _register
+from setuptools.command.upload import upload as _upload
 
-#import setuptools as dist
-#setup = dist.setup
+setup = setuptools.setup
+
+# TODO: also see if I can support distutils (at least for end-users).
+
 
 
 PACKAGES = [
@@ -52,6 +59,15 @@ class register(_register):
         prompt(self)
         return _register.post_to_server(self, data, auth=auth)
 
+CLASSIFIERS = (
+    'Development Status :: 2 - Pre-Alpha',
+    'License :: OSI Approved :: BSD License',
+    'Programming Language :: Python',
+    'Programming Language :: Python :: 2',
+    'Programming Language :: Python :: 2.7',
+    'Programming Language :: Python :: Implementation :: PyPy',
+)
+
 setup(name='Pizza',
       cmdclass = {'register': register, 'upload': upload},
 #      install_requires=INSTALL_REQUIRES,
@@ -63,4 +79,5 @@ setup(name='Pizza',
             'pizza=pizza.scripts.pizza.main:main',
         ],
       },
+      classifiers=CLASSIFIERS,
 )
