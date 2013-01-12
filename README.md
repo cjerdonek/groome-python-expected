@@ -13,8 +13,8 @@ Pizza
 <!-- Also compare with the image markup used in the Molt project README. -->
 [![Build Status](https://travis-ci.org/cjerdonek/groome-python-expected.png)](https://travis-ci.org/cjerdonek/groome-python-expected)
 
-This project is what you get when you render the
-[Groome](http://cjerdonek.github.com/groome) template
+This is a working skeleton project to show what you get when you render
+the [Groome](http://cjerdonek.github.com/groome) template
 [groome-python](https://github.com/cjerdonek/groome-python) with its
 sample configuration file.
 
@@ -22,10 +22,45 @@ sample configuration file.
 yet usable.]
 
 
-For Contributors
-----------------
+Install It
+----------
 
-TODO
+    TODO
+
+
+Test it
+-------
+
+    TODO
+
+
+Try it
+------
+
+    TODO
+
+
+Hack on it
+----------
+
+This section describes how to use Pizza from a source checkout.  To run
+the main `pizza` script from source:
+
+    $ python runpizza.py tomatoes garlic
+    input: tomatoes, garlic
+
+This script is essentially a development convenience for running:
+
+    $ python -m pizza.scripts.pizza ...
+
+To get help and see all options:
+
+    $ python runpizza.py --help
+
+To run project tests (which are already stubbed out):
+
+    $ python runpizza.py --run-tests
+
 
 For Maintainers
 ---------------
