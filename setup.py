@@ -16,14 +16,24 @@
 
 import sys
 
-import setuptools as setuptools
-from setuptools.command.register import register as _register
-from setuptools.command.upload import upload as _upload
+# TODO: explore whether I can support distutils (at least for end-users).
+USE_SETUPTOOLS = False
 
-setup = setuptools.setup
+if USE_SETUPTOOLS:
+    import setuptools
+    from setuptools.command.register import register as _register
+    from setuptools.command.upload import upload as _upload
+    setup = setuptools.setup
+    dist = setuptools
+else:
+    import distutils
+    from distutils.command.register import register as _register
+    from distutils.command.upload import upload as _upload
+    from distutils.core import setup
+    dist = distutils
 
-# TODO: also see if I can support distutils (at least for end-users).
 
+# TODO: configure logging simply.
 
 
 PACKAGES = [
@@ -68,16 +78,22 @@ CLASSIFIERS = (
     'Programming Language :: Python :: Implementation :: PyPy',
 )
 
-setup(name='Pizza',
-      cmdclass = {'register': register, 'upload': upload},
-#      install_requires=INSTALL_REQUIRES,
-      packages=PACKAGES,
-      long_description='testing...',
-#      package_data=package_data,
-      entry_points = {
-        'console_scripts': [
-            'pizza=pizza.scripts.pizza.main:main',
-        ],
-      },
-      classifiers=CLASSIFIERS,
-)
+def main(sys_argv):
+    # TODO: switch to the logging module instead of print().
+    print("using: version %s of %s" % (repr(dist.__version__), repr(dist)))
+    setup(name='Pizza',
+          cmdclass = {'register': register, 'upload': upload},
+    #      install_requires=INSTALL_REQUIRES,
+          packages=PACKAGES,
+          long_description='testing 1, 2, 3, 4, 5, testing',
+    #      package_data=package_data,
+          entry_points = {
+            'console_scripts': [
+                'pizza=pizza.scripts.pizza.main:main',
+            ],
+          },
+          classifiers=CLASSIFIERS,
+    )
+
+if __name__=='__main__':
+    main(sys.argv)
