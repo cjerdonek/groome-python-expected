@@ -86,12 +86,35 @@ def prompt(command):
         sys.exit("aborted: %s" % command_name)
 
 
-# Subclass so we can prompt before writing to PyPI.
+def get_long_description():
+    path = LONG_DESCRIPTION_PATH
+    try:
+        long_description = utils.read(path)
+    except IOError:
+        if not os.path.exists(path):
+            raise Exception("Long-description file not found at: %s\n"
+                            "  You must first run the command: %s\n"
+                            "  See the docstring of this module for details." % (path, COMMAND_PREP))
+        raise
+    return long_description
+
+
+## New and customized setup() commands.
+##
+## For commands that write to PyPI, we customize them to prompt with the
+## URL before writing to PyPI.
+
 class upload(_upload):
     def run(self):
         prompt(self)
         return _upload.run(self)
 
+class register(_register):
+    # We override post_to_server() instead of run() because finalize_options()
+    # and self._set_config() are called at the beginning of run().
+    def post_to_server(self, data, auth=None):
+        prompt(self)
+        return _register.post_to_server(self, data, auth=auth)
 
 class prep(Command):
     """
@@ -113,15 +136,6 @@ class prep(Command):
         utils.update_description_file([README_PATH, HISTORY_PATH],
                                       LONG_DESCRIPTION_PATH,
                                       docstring_path=__file__)
-
-
-# Subclass so we can prompt before writing to PyPI.
-class register(_register):
-    # We override post_to_server() instead of run() because finalize_options()
-    # and self._set_config() are called at the beginning of run().
-    def post_to_server(self, data, auth=None):
-        prompt(self)
-        return _register.post_to_server(self, data, auth=auth)
 
 
 CLASSIFIERS = (
@@ -157,13 +171,15 @@ def main(sys_argv):
     _log.info("using: version %s (%s) of %s" %
               (repr(dist.__version__), dist_version, repr(dist)))
 
+    long_description = get_long_description()
+
     setup(name='Pizza',
           cmdclass = {'pizza_prep': prep,
                       'register': register,
                       'upload': upload},
     #      install_requires=INSTALL_REQUIRES,
           packages=PACKAGES,
-          long_description='testing 1, 2, 3, 4, 5, 6, 7, 8, testing',
+          long_description=long_description,
     #      package_data=package_data,
           entry_points = {
             'console_scripts': [
