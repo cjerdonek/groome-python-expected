@@ -14,6 +14,8 @@
 #  * install_requires
 #
 
+# Distribute/setuptools does not expose all distutils classes.
+from distutils.cmd import Command
 import os
 import sys
 
@@ -22,6 +24,8 @@ import pizza_setup.utils as utils
 PACKAGE_NAME = 'pizza'
 # TODO: explore whether I can support distutils (at least for end-users).
 USE_DISTRIBUTE = True
+
+dist_version = None
 
 if USE_DISTRIBUTE:
     # Distribute does not seem to support the -r/--repository option
@@ -33,8 +37,10 @@ if USE_DISTRIBUTE:
     from setuptools.command.upload import upload as _upload
     setup = setuptools.setup
     dist = setuptools
+    import pkg_resources  # included with Distribute.
+    # This is different from setuptools.__version__, which is always '0.6'.
+    dist_version = pkg_resources.get_distribution("distribute").version
 else:
-    import distutils
     from distutils.command.register import register as _register
     from distutils.command.upload import upload as _upload
     from distutils.core import setup
@@ -69,6 +75,22 @@ class upload(_upload):
         prompt(self)
         return _upload.run(self)
 
+class prep(Command):
+    """
+    Prepare a release for pushing to PyPI.
+
+    In particular, this updates the long_description file, which should
+    be committed prior to pushing to PyPI.
+
+    """
+    # Required by distutils.
+    user_options = []
+    def initialize_options(self): pass
+    def finalize_options(self): pass
+
+    def run(self):
+        print("testing...")
+
 # Subclass so we can prompt before writing to PyPI.
 class register(_register):
     # We override post_to_server() instead of run() because finalize_options()
@@ -95,12 +117,15 @@ def main(sys_argv):
     version = utils.scrape_version(package_dir)
 
     # TODO: switch to the logging module instead of print().
-    print("using: version %s of %s" % (repr(dist.__version__), repr(dist)))
+    print("using: version %s (%s) of %s" %
+          (repr(dist.__version__), dist_version, repr(dist)))
     setup(name='Pizza',
-          cmdclass = {'register': register, 'upload': upload},
+          cmdclass = {'prep': prep,
+                      'register': register,
+                      'upload': upload},
     #      install_requires=INSTALL_REQUIRES,
           packages=PACKAGES,
-          long_description='testing 1, 2, 3, 4, 5, 6, testing',
+          long_description='testing 1, 2, 3, 4, 5, 6, 7, 8, testing',
     #      package_data=package_data,
           entry_points = {
             'console_scripts': [
