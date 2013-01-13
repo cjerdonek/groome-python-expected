@@ -14,12 +14,20 @@
 #  * install_requires
 #
 
+import os
 import sys
 
-# TODO: explore whether I can support distutils (at least for end-users).
-USE_SETUPTOOLS = False
+import pizza_setup.utils as utils
 
-if USE_SETUPTOOLS:
+PACKAGE_NAME = 'pizza'
+# TODO: explore whether I can support distutils (at least for end-users).
+USE_DISTRIBUTE = True
+
+if USE_DISTRIBUTE:
+    # Distribute does not seem to support the -r/--repository option
+    # with the register command (at least without a [server-login] section
+    # in the .pypirc).  See Distribute issue #346 :
+    # https://bitbucket.org/tarek/distribute/issue/346/upload-fails-without-server-login-but
     import setuptools
     from setuptools.command.register import register as _register
     from setuptools.command.upload import upload as _upload
@@ -79,13 +87,20 @@ CLASSIFIERS = (
 )
 
 def main(sys_argv):
+    """
+    Call setup() with the correct arguments.
+
+    """
+    package_dir = os.path.join(os.path.dirname(__file__), PACKAGE_NAME)
+    version = utils.scrape_version(package_dir)
+
     # TODO: switch to the logging module instead of print().
     print("using: version %s of %s" % (repr(dist.__version__), repr(dist)))
     setup(name='Pizza',
           cmdclass = {'register': register, 'upload': upload},
     #      install_requires=INSTALL_REQUIRES,
           packages=PACKAGES,
-          long_description='testing 1, 2, 3, 4, 5, testing',
+          long_description='testing 1, 2, 3, 4, 5, 6, testing',
     #      package_data=package_data,
           entry_points = {
             'console_scripts': [
@@ -93,6 +108,7 @@ def main(sys_argv):
             ],
           },
           classifiers=CLASSIFIERS,
+          version=version,
     )
 
 if __name__=='__main__':
