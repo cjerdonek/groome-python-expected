@@ -1,4 +1,4 @@
 TODO
 ====
 
-[ ] Add TODO items.
+* Start adding TODO items.
