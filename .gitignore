@@ -1,3 +1,7 @@
+# Non-Python-specific
+# TODO: is there a way to keep non-Python-specific stuff separate?
+.DS_Store
+
 *.py[cod]
 
 # C extensions
