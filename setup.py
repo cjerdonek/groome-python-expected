@@ -24,13 +24,17 @@ from distutils.cmd import Command
 #   https://bitbucket.org/tarek/distribute/issue/348
 #
 from distutils.command.upload import upload as _upload
+import logging
 import os
 import sys
 
 import pizza_setup.utils as utils
 
+_log = logging.getLogger(os.path.basename(__file__))
+
 PACKAGE_NAME = 'pizza'
 # TODO: explore whether I can support distutils (at least for end-users).
+# This boolean is temporary for more convenient testing/experimentation.
 USE_DISTRIBUTE = True
 
 dist_version = None
@@ -66,6 +70,20 @@ PACKAGES = [
     'pizza.test.harness',
     'pizza.test.pizza',
 ]
+
+def configure_logging():
+    """
+    Configure logging with simple settings.
+
+    """
+    # Prefix the log messages to distinguish them from other text sent to
+    # the error stream.
+    format_string = ("%s: %%(name)s: [%%(levelname)s] %%(message)s" %
+                     PACKAGE_NAME)
+
+    logging.basicConfig(format=format_string, level=logging.INFO)
+
+    _log.debug("Debug logging enabled.")
 
 def prompt(command):
     command_name = command.get_command_name()
@@ -122,12 +140,14 @@ def main(sys_argv):
     Call setup() with the correct arguments.
 
     """
+    configure_logging()
     package_dir = os.path.join(os.path.dirname(__file__), PACKAGE_NAME)
     version = utils.scrape_version(package_dir)
 
-    # TODO: switch to the logging module instead of print().
-    print("using: version %s (%s) of %s" %
-          (repr(dist.__version__), dist_version, repr(dist)))
+    _log.info("version: %s" % version)
+    _log.info("using: version %s (%s) of %s" %
+              (repr(dist.__version__), dist_version, repr(dist)))
+
     setup(name='Pizza',
           cmdclass = {'pizza_prep': prep,
                       'register': register,
