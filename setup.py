@@ -2,6 +2,40 @@
 
 """
 
+Instructions for Maintainers
+============================
+
+
+
+1. Update the long_description file
+-----------------------------------
+
+The long_description argument to setup() is stored in a source file.
+Update and commit this file before pushing to PyPI.  To update the file:
+
+    python setup.py prep
+
+This writes the long description to setup_long_description.rst.  Then commit
+this file to the repository.
+
+You must have pandoc installed to run the prep command:
+
+    http://johnmacfarlane.net/pandoc/
+
+It helps to check the long_description file prior to pushing to PyPI because
+if PyPI encounters any problems, it will render the long description as
+plain-text instead of as HTML.  To check the file, convert it to HTML yourself
+using the same process that PyPI uses.  After installing Docutils
+(http://docutils.sourceforge.net/), run--
+
+    $ python setup.py --long-description | rst2html.py --no-raw > temp.html
+
+Also see:
+
+  http://docs.python.org/dev/distutils/uploading.html#pypi-package-display
+  http://bugs.python.org/issue15231
+
+You can also view the long description file on GitHub as a sanity check.
 
 """
 

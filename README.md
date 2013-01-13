@@ -8,9 +8,11 @@ rejects reST long descriptions containing HTML. -->
 
 <!-- TODO: add a placeholder image. -->
 
-<!-- TODO: check that this link renders nicely in both HTML and reST.
-Also compare with the image markup used in the Molt project README. -->
-[![Build Status](https://travis-ci.org/cjerdonek/groome-python-expected.png)](https://travis-ci.org/cjerdonek/groome-python-expected)
+<!-- TODO: change the following link to this:
+  [![Build Status](https://travis-ci.org/cjerdonek/groome-python-expected.png)](https://travis-ci.org/cjerdonek/groome-python-expected)
+once the following pandoc issue is resolved:
+  https://github.com/jgm/pandoc/issues/697 -->
+![](https://travis-ci.org/cjerdonek/groome-python-expected.png)
 
 This is the working skeleton project you get when you render the
 [Groome](http://cjerdonek.github.com/groome) template

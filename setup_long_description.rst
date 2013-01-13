@@ -11,8 +11,8 @@
 Pizza
 =====
 
-`|Build
-Status| <https://travis-ci.org/cjerdonek/groome-python-expected>`_
+.. figure:: https://travis-ci.org/cjerdonek/groome-python-expected.png
+   :alt: 
 
 This is the working skeleton project you get when you render the
 `Groome <http://cjerdonek.github.com/groome>`_ template
@@ -121,5 +121,3 @@ History
 
 -  Initial release.
 
-.. |Build
-Status| image:: https://travis-ci.org/cjerdonek/groome-python-expected.png
