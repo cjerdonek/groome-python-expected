@@ -33,3 +33,7 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+
+# Pizza-specific
+*.temp.md
+*.temp.rst

@@ -30,14 +30,11 @@ import sys
 
 import pizza_setup.utils as utils
 
-_log = logging.getLogger(os.path.basename(__file__))
+dist_version = None
 
-PACKAGE_NAME = 'pizza'
 # TODO: explore whether I can support distutils (at least for end-users).
 # This boolean is temporary for more convenient testing/experimentation.
 USE_DISTRIBUTE = True
-
-dist_version = None
 
 if USE_DISTRIBUTE:
     # Distribute does not seem to support the -r/--repository option
@@ -56,20 +53,14 @@ else:
     from distutils.core import setup
     dist = distutils
 
+PACKAGE_NAME = 'pizza'
 
-# TODO: configure logging simply.
+README_PATH = 'README.md'
+HISTORY_PATH = 'HISTORY.md'
+LONG_DESCRIPTION_PATH = 'setup_long_description.rst'
 
+_log = logging.getLogger(os.path.basename(__file__))
 
-PACKAGES = [
-    'pizza',
-    'pizza.scripts',
-    'pizza.scripts.pizza',
-    'pizza.scripts.pizza.general',
-    # The following packages are only for testing.
-    'pizza.test',
-    'pizza.test.harness',
-    'pizza.test.pizza',
-]
 
 def configure_logging():
     """
@@ -85,6 +76,7 @@ def configure_logging():
 
     _log.debug("Debug logging enabled.")
 
+
 def prompt(command):
     command_name = command.get_command_name()
     # The repository attribute is the URL.
@@ -93,11 +85,13 @@ def prompt(command):
     if answer != "yes":
         sys.exit("aborted: %s" % command_name)
 
+
 # Subclass so we can prompt before writing to PyPI.
 class upload(_upload):
     def run(self):
         prompt(self)
         return _upload.run(self)
+
 
 class prep(Command):
     """
@@ -110,13 +104,16 @@ class prep(Command):
 
     description = ("prepare a release for pushing to PyPI")
 
-    # Required by distutils.
+    # Attributes and methods required by distutils.
     user_options = []
     def initialize_options(self): pass
     def finalize_options(self): pass
 
     def run(self):
-        print("testing...")
+        utils.update_description_file([README_PATH, HISTORY_PATH],
+                                      LONG_DESCRIPTION_PATH,
+                                      docstring_path=__file__)
+
 
 # Subclass so we can prompt before writing to PyPI.
 class register(_register):
@@ -125,6 +122,7 @@ class register(_register):
     def post_to_server(self, data, auth=None):
         prompt(self)
         return _register.post_to_server(self, data, auth=auth)
+
 
 CLASSIFIERS = (
     'Development Status :: 2 - Pre-Alpha',
@@ -135,6 +133,17 @@ CLASSIFIERS = (
     'Programming Language :: Python :: Implementation :: PyPy',
 )
 
+PACKAGES = [
+    'pizza',
+    'pizza.scripts',
+    'pizza.scripts.pizza',
+    'pizza.scripts.pizza.general',
+    # The following packages are only for testing.
+    'pizza.test',
+    'pizza.test.harness',
+    'pizza.test.pizza',
+]
+
 def main(sys_argv):
     """
     Call setup() with the correct arguments.
@@ -144,7 +153,7 @@ def main(sys_argv):
     package_dir = os.path.join(os.path.dirname(__file__), PACKAGE_NAME)
     version = utils.scrape_version(package_dir)
 
-    _log.info("version: %s" % version)
+    _log.info("running version: %s" % version)
     _log.info("using: version %s (%s) of %s" %
               (repr(dist.__version__), dist_version, repr(dist)))
 
