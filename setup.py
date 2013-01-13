@@ -1,11 +1,17 @@
+#!/usr/bin/env python
 # coding: utf-8
 
 """
+Standard Python setup script to support distribution-related tasks.
+
+This docstring contains instructions for Pizza maintainers.  For
+installation and usage instructions, consult the README or the project page:
+
+https://github.com/cjerdonek/groome-python-expected
+
 
 Instructions for Maintainers
 ============================
-
-
 
 1. Update the long_description file
 -----------------------------------
@@ -64,9 +70,10 @@ import sys
 
 import pizza_setup.utils as utils
 
+
 dist_version = None
 
-# TODO: explore whether I can support distutils (at least for end-users).
+# TODO: explore whether I can support distutils (at least for installers).
 # This boolean is temporary for more convenient testing/experimentation.
 USE_DISTRIBUTE = True
 
@@ -88,6 +95,8 @@ else:
     dist = distutils
 
 PACKAGE_NAME = 'pizza'
+
+COMMAND_PREP = 'pizza_prep'
 
 README_PATH = 'README.md'
 HISTORY_PATH = 'HISTORY.md'
@@ -131,6 +140,28 @@ def get_long_description():
                             "  See the docstring of this module for details." % (path, COMMAND_PREP))
         raise
     return long_description
+
+
+# The purpose of this function is to follow the guidance suggested here:
+#
+#   http://packages.python.org/distribute/python3.html#note-on-compatibility-with-setuptools
+#
+# The guidance is for better compatibility when using setuptools (e.g. with
+# earlier versions of Python 2) instead of Distribute, because of new
+# keyword arguments to setup() that setuptools may not recognize.
+def get_extra_args():
+    """
+    Return a dictionary of extra args to pass to setup().
+
+    """
+    extra = {}
+    # Check the Python version instead of whether we're using Distribute or
+    # setuptools because the former is less brittle.
+    if sys.version_info >= (3, ):
+        # Causes 2to3 to be run during the build step.
+        extra[ARG_USE_2TO3] = True
+
+    return extra
 
 
 ## New and customized setup() commands.
@@ -190,6 +221,7 @@ PACKAGES = [
     'pizza.test',
     'pizza.test.harness',
     'pizza.test.pizza',
+    'pizza_setup'
 ]
 
 def main(sys_argv):
@@ -202,10 +234,14 @@ def main(sys_argv):
     version = utils.scrape_version(package_dir)
 
     _log.info("running version: %s" % version)
-    _log.info("using: version %s (%s) of %s" %
-              (repr(dist.__version__), dist_version, repr(dist)))
+    _log.info("using: version %r (%s) of %r" %
+              (dist.__version__, dist_version, dist))
 
     long_description = get_long_description()
+    extra_args = get_extra_args()
+
+    if extra_args:
+        _log.info('including extra kwargs: %r' % extra_args)
 
     setup(name='Pizza',
           version=version,
@@ -217,7 +253,7 @@ def main(sys_argv):
           url='https://github.com/cjerdonek/groome-python-expected',
           packages=PACKAGES,
           classifiers=CLASSIFIERS,
-          cmdclass = {'pizza_prep': prep,
+          cmdclass = {COMMAND_PREP: prep,
                       'register': register,
                       'upload': upload},
     #      install_requires=INSTALL_REQUIRES,
@@ -227,6 +263,7 @@ def main(sys_argv):
                 'pizza=pizza.scripts.pizza.main:main',
             ],
           },
+          **extra_args
     )
 
 if __name__=='__main__':
