@@ -16,6 +16,14 @@
 
 # Distribute/setuptools does not expose all distutils classes.
 from distutils.cmd import Command
+# We use distutils's upload command because Distribute's seems not to
+# work as well in certain circumstances.  For example, see the following
+# Distribute bug reports:
+#
+#   https://bitbucket.org/tarek/distribute/issue/346
+#   https://bitbucket.org/tarek/distribute/issue/348
+#
+from distutils.command.upload import upload as _upload
 import os
 import sys
 
@@ -34,7 +42,6 @@ if USE_DISTRIBUTE:
     # https://bitbucket.org/tarek/distribute/issue/346/upload-fails-without-server-login-but
     import setuptools
     from setuptools.command.register import register as _register
-    from setuptools.command.upload import upload as _upload
     setup = setuptools.setup
     dist = setuptools
     import pkg_resources  # included with Distribute.
@@ -42,7 +49,6 @@ if USE_DISTRIBUTE:
     dist_version = pkg_resources.get_distribution("distribute").version
 else:
     from distutils.command.register import register as _register
-    from distutils.command.upload import upload as _upload
     from distutils.core import setup
     dist = distutils
 
@@ -120,7 +126,7 @@ def main(sys_argv):
     print("using: version %s (%s) of %s" %
           (repr(dist.__version__), dist_version, repr(dist)))
     setup(name='Pizza',
-          cmdclass = {'prep': prep,
+          cmdclass = {'pizza-prep': prep,
                       'register': register,
                       'upload': upload},
     #      install_requires=INSTALL_REQUIRES,
