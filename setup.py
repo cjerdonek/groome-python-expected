@@ -208,20 +208,25 @@ def main(sys_argv):
     long_description = get_long_description()
 
     setup(name='Pizza',
+          version=version,
+          description='a model project for a Python command-line script',
+          long_description=long_description,
+          keywords='project template groome molt pystache mustache',
+          author='Chris Jerdonek',
+          author_email='chris.jerdonek@gmail.com',
+          url='https://github.com/cjerdonek/groome-python-expected',
+          packages=PACKAGES,
+          classifiers=CLASSIFIERS,
           cmdclass = {'pizza_prep': prep,
                       'register': register,
                       'upload': upload},
     #      install_requires=INSTALL_REQUIRES,
-          packages=PACKAGES,
-          long_description=long_description,
     #      package_data=package_data,
           entry_points = {
             'console_scripts': [
                 'pizza=pizza.scripts.pizza.main:main',
             ],
           },
-          classifiers=CLASSIFIERS,
-          version=version,
     )
 
 if __name__=='__main__':
