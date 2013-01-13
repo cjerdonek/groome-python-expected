@@ -1,16 +1,15 @@
 Pizza
 =====
 
-<!-- All Markdown comments are in the format of one-line HTML comments -->
-<!-- to simplify the conversion of Markdown to reST.  We strip comments -->
-<!-- of this form prior to passing the file to pandoc because pandoc -->
-<!-- preserves HTML and PyPI rejects reST long descriptions containing -->
-<!-- HTML. -->
+<!-- All Markdown comments are in the form of HTML comments to simplify
+converting Markdown to reST.  We strip comments of this form prior to
+passing the file to pandoc because pandoc preserves HTML and PyPI
+rejects reST long descriptions containing HTML. -->
 
 <!-- TODO: add a placeholder image. -->
 
-<!-- TODO: check that this link renders nicely in both HTML and reST. -->
-<!-- Also compare with the image markup used in the Molt project README. -->
+<!-- TODO: check that this link renders nicely in both HTML and reST.
+Also compare with the image markup used in the Molt project README. -->
 [![Build Status](https://travis-ci.org/cjerdonek/groome-python-expected.png)](https://travis-ci.org/cjerdonek/groome-python-expected)
 
 This is the working skeleton project you get when you render the

@@ -79,7 +79,7 @@ def scrape_version(package_dir):
 
     return version
 
-# TODO: support multi-line HTML comments.
+
 def strip_html_comments(source_path):
     """
     Read the file, and strip HTML comments.
@@ -87,11 +87,19 @@ def strip_html_comments(source_path):
     Returns a unicode string.
 
     """
+    # This function assumes no line mixes HTML comments and non-comments.
     text = read(source_path)
     lines = text.splitlines(True)  # preserve line endings.
 
-    # Remove HTML comments (which we only allow to take a special form).
-    new_lines = filter(lambda line: not line.startswith("<!--"), lines)
+    new_lines = []
+    exclude = False
+    for line in lines:
+        if line.startswith("<!--"):
+            exclude = True
+        if not exclude:
+            new_lines.append(line)
+        if line.find("-->") >= 0:
+            exclude = False
 
     return "".join(new_lines)
 
