@@ -89,6 +89,9 @@ class prep(Command):
     be committed prior to pushing to PyPI.
 
     """
+
+    description = ("prepare a release for pushing to PyPI")
+
     # Required by distutils.
     user_options = []
     def initialize_options(self): pass
@@ -126,7 +129,7 @@ def main(sys_argv):
     print("using: version %s (%s) of %s" %
           (repr(dist.__version__), dist_version, repr(dist)))
     setup(name='Pizza',
-          cmdclass = {'pizza-prep': prep,
+          cmdclass = {'pizza_prep': prep,
                       'register': register,
                       'upload': upload},
     #      install_requires=INSTALL_REQUIRES,
