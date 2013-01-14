@@ -10,8 +10,8 @@ installation and usage instructions, consult the README or the project page:
 https://github.com/cjerdonek/groome-python-expected
 
 
-Instructions for Maintainers
-============================
+Releasing a new version
+=======================
 
 1. Update the long_description file
 -----------------------------------
@@ -19,12 +19,12 @@ Instructions for Maintainers
 The long_description argument to setup() is stored in a source file.
 Update and commit this file before pushing to PyPI.  To update the file:
 
-    python setup.py prep
+    python setup.py pizza_prep
 
 This writes the long description to setup_long_description.rst.  Then commit
 this file to the repository.
 
-You must have pandoc installed to run the prep command:
+You must have pandoc installed to run the pizza_prep command:
 
     http://johnmacfarlane.net/pandoc/
 
@@ -54,6 +54,7 @@ You can also view the long description file on GitHub as a sanity check.
 #  * install_requires
 #
 
+import distutils
 # Distribute/setuptools does not expose all distutils classes.
 from distutils.cmd import Command
 # We use distutils's upload command because Distribute's seems not to
@@ -84,6 +85,7 @@ if USE_DISTRIBUTE:
     # https://bitbucket.org/tarek/distribute/issue/346/upload-fails-without-server-login-but
     import setuptools
     from setuptools.command.register import register as _register
+    from setuptools.command.sdist import sdist as _sdist
     setup = setuptools.setup
     dist = setuptools
     import pkg_resources  # included with Distribute.
@@ -91,12 +93,11 @@ if USE_DISTRIBUTE:
     dist_version = pkg_resources.get_distribution("distribute").version
 else:
     from distutils.command.register import register as _register
+    from distutils.command.sdist import sdist as _sdist
     from distutils.core import setup
     dist = distutils
 
 PACKAGE_NAME = 'pizza'
-
-COMMAND_PREP = 'pizza_prep'
 
 README_PATH = 'README.md'
 HISTORY_PATH = 'HISTORY.md'
@@ -135,9 +136,7 @@ def get_long_description():
         long_description = utils.read(path)
     except IOError:
         if not os.path.exists(path):
-            raise Exception("Long-description file not found at: %s\n"
-                            "  You must first run the command: %s\n"
-                            "  See the docstring of this module for details." % (path, COMMAND_PREP))
+            raise Exception("long_description file missing: %s" % path)
         raise
     return long_description
 
@@ -181,16 +180,29 @@ class register(_register):
         prompt(self)
         return _register.post_to_server(self, data, auth=auth)
 
-class prep(Command):
+class sdist(_sdist):
+    def run(self):
+        # _sdist.make_distribution() was referenced in writing this method.
+        _saved_keep_temp = self.keep_temp
+        self.keep_temp = True
+        _sdist.run(self)
+        base_dir = self.distribution.get_fullname()
+        _log.info("showing differences between: %s and %s" % (os.curdir,
+                  base_dir))
+        # TODO: run show differences.
+        self.keep_temp = _saved_keep_temp
+        if not self.keep_temp:
+            distutils.dir_util.remove_tree(base_dir, dry_run=self.dry_run)
+
+class pizza_prep(Command):
     """
-    Prepare a release for pushing to PyPI.
+    Prepare the project for pushing to PyPI.
 
     In particular, this updates the long_description file, which should
     be committed prior to pushing to PyPI.
 
     """
-
-    description = ("prepare a release for pushing to PyPI")
+    description = ("prepare the project for pushing to PyPI")
 
     # Attributes and methods required by distutils.
     user_options = []
@@ -234,8 +246,8 @@ def main(sys_argv):
     version = utils.scrape_version(package_dir)
 
     _log.info("running version: %s" % version)
-    _log.info("using: version %r (%s) of %r" %
-              (dist.__version__, dist_version, dist))
+    _log.info("using: version %r (%s) of %r" % (dist.__version__,
+                                                dist_version, dist))
 
     long_description = get_long_description()
     extra_args = get_extra_args()
@@ -253,8 +265,9 @@ def main(sys_argv):
           url='https://github.com/cjerdonek/groome-python-expected',
           packages=PACKAGES,
           classifiers=CLASSIFIERS,
-          cmdclass = {COMMAND_PREP: prep,
+          cmdclass = {pizza_prep.__name__: pizza_prep,
                       'register': register,
+                      'sdist': sdist,
                       'upload': upload},
     #      install_requires=INSTALL_REQUIRES,
     #      package_data=package_data,
