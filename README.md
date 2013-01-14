@@ -44,11 +44,14 @@ Try it
     TODO
 
 
-Hack on it
-----------
+Hack it
+-------
 
-This section describes how to use Pizza from a source checkout.  To run
-the main `pizza` script from source:
+This section describes how to modify and contribute to Pizza.  In particular,
+it shows you the way around and how to interact with Pizza from a source
+checkout.
+
+To run the main `pizza` script from source:
 
     $ python runpizza.py tomatoes garlic
     input: tomatoes, garlic
@@ -57,6 +60,7 @@ This script is essentially a development convenience for running:
 
     $ python -m pizza.scripts.pizza ...
 
+which is in turn equivalent to the command above that
 To get help and see all options:
 
     $ python runpizza.py --help
