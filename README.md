@@ -6,13 +6,16 @@ converting Markdown to reST.  We strip comments of this form prior to
 passing the file to pandoc because pandoc preserves HTML and PyPI
 rejects reST long descriptions containing HTML. -->
 
-<!-- TODO: add a placeholder image. -->
+<!-- We leave the leading brackets empty here.  Otherwise, unwanted caption
+text shows up in the reST version converted by pandoc.  This image is served
+from GitHub pages because that's what GitHub prefers. -->
+![](http://cjerdonek.github.com/groome/images/python-pizza.jpeg "python eating pizza")
 
 <!-- TODO: change the following link to this:
   [![Build Status](https://travis-ci.org/cjerdonek/groome-python-expected.png)](https://travis-ci.org/cjerdonek/groome-python-expected)
-once the following pandoc issue is resolved:
+once the resolution for the following pandoc issue is released:
   https://github.com/jgm/pandoc/issues/697 -->
-![](https://travis-ci.org/cjerdonek/groome-python-expected.png)
+![](https://travis-ci.org/cjerdonek/groome-python-expected.png "Build Status")
 
 This is the working skeleton project you get when you render the
 [Groome](http://cjerdonek.github.com/groome) template
