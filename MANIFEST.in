@@ -1,0 +1,18 @@
+# The following files get included automatically, so there is no need
+# to include them explicitly:
+#
+#   MANIFEST.in
+#   setup.py
+#
+include .gitignore
+include .travis.yml
+include HISTORY.md
+include README.md
+include runpizza.py
+include setup_long_description.rst
+include TODO.md
+include tox.ini
+# We include pizza_setup in MANIFEST.in but not in setup()'s `packages`
+# argument to include pizza_setup in the source distribution but not
+# in the build/install.
+recursive-include molt_setup *.py

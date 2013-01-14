@@ -141,32 +141,35 @@ def get_long_description():
     return long_description
 
 
-# The purpose of this function is to follow the guidance suggested here:
-#
-#   http://packages.python.org/distribute/python3.html#note-on-compatibility-with-setuptools
-#
-# The guidance is for better compatibility when using setuptools (e.g. with
-# earlier versions of Python 2) instead of Distribute, because of new
-# keyword arguments to setup() that setuptools may not recognize.
-def get_extra_args():
+def show_differences(project_dir, sdist_dir):
     """
-    Return a dictionary of extra args to pass to setup().
+    Display how the sdist differs from the project directory.
 
     """
-    extra = {}
-    # Check the Python version instead of whether we're using Distribute or
-    # setuptools because the former is less brittle.
-    if sys.version_info >= (3, ):
-        # Causes 2to3 to be run during the build step.
-        extra[ARG_USE_2TO3] = True
+    # TODO: add more files/directories here:
+    # .git
+    # .tox
+    # Pizza-0.1.0
+    # build
+    # dist
+    def ignore_in_project_dir(path):
+        dir_path, base_name = os.path.split(path)
+        if base_name.endswith('.pyc'):
+            return True
+        if base_name == '__pycache__':
+            return True
+        if base_name == '.DS_Store':
+            return True
+        return False
 
-    return extra
+    print(utils.describe_differences(sdist_dir, project_dir,
+                                     ignore_right=ignore_in_project_dir))
 
 
-## New and customized setup() commands.
-##
-## For commands that write to PyPI, we customize them to prompt with the
-## URL before writing to PyPI.
+# New and customized setup() commands:
+#
+# For commands that write to PyPI, we customize them to prompt with the
+# URL before writing to PyPI.
 
 class upload(_upload):
     def run(self):
@@ -180,6 +183,9 @@ class register(_register):
         prompt(self)
         return _register.post_to_server(self, data, auth=auth)
 
+# This command differs from the original by displaying a report showing
+# differences between the project repository and the source distribution.
+# This is useful in double-checking MANIFEST.in.
 class sdist(_sdist):
     def run(self):
         # _sdist.make_distribution() was referenced in writing this method.
@@ -189,7 +195,7 @@ class sdist(_sdist):
         base_dir = self.distribution.get_fullname()
         _log.info("showing differences between: %s and %s" % (os.curdir,
                   base_dir))
-        # TODO: run show differences.
+        show_differences(os.curdir, base_dir)
         self.keep_temp = _saved_keep_temp
         if not self.keep_temp:
             distutils.dir_util.remove_tree(base_dir, dry_run=self.dry_run)
@@ -214,6 +220,27 @@ class pizza_prep(Command):
                                       LONG_DESCRIPTION_PATH,
                                       docstring_path=__file__)
 
+
+# The purpose of this function is to follow the guidance suggested here:
+#
+#   http://packages.python.org/distribute/python3.html#note-on-compatibility-with-setuptools
+#
+# The guidance is for better compatibility when using setuptools (e.g. with
+# earlier versions of Python 2) instead of Distribute, because of new
+# keyword arguments to setup() that setuptools may not recognize.
+def get_extra_args():
+    """
+    Return a dictionary of extra args to pass to setup().
+
+    """
+    extra = {}
+    # Check the Python version instead of whether we're using Distribute or
+    # setuptools because the former is less brittle.
+    if sys.version_info >= (3, ):
+        # Causes 2to3 to be run during the build step.
+        extra['use_2to3'] = True
+
+    return extra
 
 CLASSIFIERS = (
     'Development Status :: 2 - Pre-Alpha',

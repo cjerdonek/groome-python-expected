@@ -5,6 +5,7 @@ Utility functions for setup.py.
 
 """
 
+import filecmp
 import logging
 import os
 
@@ -78,6 +79,80 @@ def scrape_version(package_dir):
     version = eval(expr)
 
     return version
+
+
+def _get_diff_paths(dir_path1, dir_path2, results, rel_parent_dir='',
+                    ignore=None):
+    """
+    Recursively examine the given directories, and modify results in place.
+
+    Arguments:
+
+      results: a three-tuple of (left_only, right_only, diff_files).
+
+    """
+    if ignore is None:
+        ignore = lambda path: False
+
+    rewrite_name = lambda name: os.path.join(rel_parent_dir, name)
+
+    def get_relative(names):
+        return [rewrite_name(name) for name in names if not ignore(name)]
+
+    dcmp = filecmp.dircmp(dir_path1, dir_path2)
+
+    results[0].extend(get_relative(dcmp.left_only))
+    results[1].extend(get_relative(dcmp.right_only))
+    results[2].extend(get_relative(dcmp.diff_files))
+
+    for dir_name in dcmp.common_dirs:
+        dir1 = os.path.join(dir_path1, dir_name)
+        dir2 = os.path.join(dir_path2, dir_name)
+        new_rel_dir = rewrite_name(dir_name)
+
+        _get_diff_paths(dir1, dir2, results, ignore=ignore,
+                        rel_parent_dir=new_rel_dir)
+
+
+def describe_differences(dir_path1, dir_path2, ignore_right=None, indent='  '):
+    """
+    Return a string describing the difference between the given directories.
+
+    Arguments:
+
+      ignore_right: a function that accepts a relative path and returns
+        whether to skip that path in the right-only list.
+
+    """
+    if ignore_right is None:
+        ignore_right = lambda path: False
+
+    def format(header, elements):
+        header = '%s:' % header
+        if not elements:
+            header += " none"
+        strings = [header] + sorted(elements)
+        glue = '\n' + indent
+
+        return glue.join(strings)
+
+    # The 3-tuple is (left_only, right_only, diff_files).
+    results = tuple([] for i in range(3))
+
+    _get_diff_paths(dir_path1, dir_path2, results)
+
+    right_only = results[1]
+    # Slice notation modifies the list in place.
+    right_only[:] = filter(lambda path: not ignore_right(path), right_only)
+
+    headers = ['Only in %s' % dir_path1,
+               'Only in %s' % dir_path2,
+               'Differing']
+
+    strings = [format(header, sorted(paths)) for header, paths
+               in zip(headers, results)]
+
+    return "\n".join(strings)
 
 
 def strip_html_comments(source_path):
