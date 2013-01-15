@@ -181,6 +181,7 @@ def check_long_description():
 
     """
     description_path = LONG_DESCRIPTION_PATH
+    # TODO: change the temp_paths to go in a temp/ directory.
     temp_path = utils.make_temp_path(description_path)
     write_long_description(temp_path)
 
@@ -210,6 +211,9 @@ def show_differences(project_dir, sdist_dir):
             return True
         return False
 
+    # TODO: see if I can change this to show ignored files if they appear
+    # in the sdist directory since that would be an error.
+    # TODO: add an issue task to add tests for pizza_setup functions.
     print(utils.describe_differences(sdist_dir, project_dir,
                                      ignore_right=ignore_in_project_dir))
 
