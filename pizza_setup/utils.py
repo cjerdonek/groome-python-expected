@@ -146,8 +146,7 @@ def describe_differences(dir_path1, dir_path2, ignore_right=None, indent='  '):
     right_only[:] = filter(lambda path: not ignore_right(path), right_only)
 
     headers = ['Only in %s' % dir_path1,
-               'Only in %s' % dir_path2,
-               'Differing']
+               'Only in %s' % dir_path2]
 
     strings = [format(header, sorted(paths)) for header, paths
                in zip(headers, results)]
