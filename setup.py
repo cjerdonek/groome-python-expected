@@ -169,23 +169,6 @@ def get_long_description():
     return long_description
 
 
-def path_head(path):
-    """
-    Return the leading path part.
-
-    """
-    path, tail = os.path.split(path)  # strips trailing slashes from head.
-    if not path:
-        return tail
-    while True:
-        path, tail = os.path.split(path)
-        if not tail:
-            # Then prevent an endless loop: path consists only of slashes.
-            return path
-        if not path:
-            return tail
-
-
 def show_differences(project_dir, sdist_dir):
     """
     Display how the sdist differs from the project directory.
