@@ -263,7 +263,7 @@ def update_description_file(source_paths, target_path, docstring_path):
     temp_md_path = make_temp_path(target_path, new_ext=md_ext)
 
     write(md_description, temp_md_path, encoding='utf-8',
-          description='combined long_description')
+          description='preliminary long_description')
 
     temp_rst_path = make_temp_path(target_path)
     rst_description = convert_md_to_rst(source_path=temp_md_path,
@@ -287,4 +287,4 @@ def update_description_file(source_paths, target_path, docstring_path):
 
 
     write(rst_description, target_path,
-          description='finalized long_description')
+          description='complete long_description')

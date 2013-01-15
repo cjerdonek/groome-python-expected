@@ -93,6 +93,7 @@ from distutils.cmd import Command
 #   https://bitbucket.org/tarek/distribute/issue/348
 #
 from distutils.command.upload import upload as _upload
+import filecmp
 import logging
 import os
 import sys
@@ -149,13 +150,13 @@ def configure_logging():
     _log.debug("Debug logging enabled.")
 
 
-def prompt(command):
-    command_name = command.get_command_name()
-    # The repository attribute is the URL.
-    answer = raw_input("Are you sure you want to %s to %s (yes/no)? " %
-                       (command_name, command.repository))
-    if answer != "yes":
-        sys.exit("aborted: %s" % command_name)
+def error(msg):
+    """
+    Exit with an error message
+
+    """
+    _log.error(msg)
+    sys.exit(1)
 
 
 def get_long_description():
@@ -167,6 +168,31 @@ def get_long_description():
             raise Exception("long_description file missing: %s" % path)
         raise
     return long_description
+
+
+def write_long_description(target_path):
+    utils.update_description_file([README_PATH, HISTORY_PATH],
+                                  target_path,
+                                  docstring_path=__file__)
+
+def check_long_description():
+    """
+    Check whether the prep command needs to be run.
+
+    """
+    description_path = LONG_DESCRIPTION_PATH
+    temp_path = utils.make_temp_path(description_path)
+    write_long_description(temp_path)
+
+    if not filecmp.cmp(temp_path, description_path, shallow=False):
+        error("""\
+long_description out of date: %s
+Run the following command and commit the changes--
+
+    python setup.py %s
+""" % (description_path, pizza_prep.__name__))
+
+    print("long_description is current: %s" % description_path)
 
 
 def show_differences(project_dir, sdist_dir):
@@ -193,16 +219,27 @@ def show_differences(project_dir, sdist_dir):
 # For commands that write to PyPI, we add a user prompt displaying the URL
 # to reduce the chance of accidentally writing to the real PyPI.
 
-class upload(_upload):
+class CommandMixin(object):
+    def confirm_repository(self):
+        command_name = self.get_command_name()
+        # The repository attribute is the URL.
+        answer = raw_input("Are you sure you want to %s to %s (yes/no)? " %
+                           (command_name, self.repository))
+        if answer != "yes":
+            error("aborted command: %s" % command_name)
+
+class upload(_upload, CommandMixin):
     def run(self):
-        prompt(self)
+        check_long_description()
+        self.confirm_repository()
         return _upload.run(self)
 
-class register(_register):
+class register(_register, CommandMixin):
     # We override post_to_server() instead of run() because finalize_options()
     # and self._set_config() are called at the beginning of run().
     def post_to_server(self, data, auth=None):
-        prompt(self)
+        check_long_description()
+        self.confirm_repository()
         return _register.post_to_server(self, data, auth=auth)
 
 # This command differs from the original by displaying a report showing
@@ -240,9 +277,7 @@ class pizza_prep(Command):
     def finalize_options(self): pass
 
     def run(self):
-        utils.update_description_file([README_PATH, HISTORY_PATH],
-                                      LONG_DESCRIPTION_PATH,
-                                      docstring_path=__file__)
+        write_long_description(LONG_DESCRIPTION_PATH)
 
 
 # The purpose of this function is to follow the guidance suggested here:
