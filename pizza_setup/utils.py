@@ -114,18 +114,20 @@ def _get_diff_paths(dir_path1, dir_path2, results, rel_parent_dir='',
                         rel_parent_dir=new_rel_dir)
 
 
-def describe_differences(dir_path1, dir_path2, ignore_right=None, indent='  '):
+def describe_differences(project_dir, sdist_dir, skip=None, indent='  '):
     """
-    Return a string describing the difference between the given directories.
+    Describe the differences between the project and sdist directories.
+
+    Returns a string.
 
     Arguments:
 
-      ignore_right: a function that accepts a relative path and returns
-        whether to skip that path in the right-only list.
+      skip: a function that accepts a path relative to the project directory
+        and returns whether that file should be skipped instead of copied.
 
     """
-    if ignore_right is None:
-        ignore_right = lambda path: False
+    if skip is None:
+        skip = lambda path: False
 
     def format(header, elements):
         header = '%s:' % header
@@ -139,14 +141,14 @@ def describe_differences(dir_path1, dir_path2, ignore_right=None, indent='  '):
     # The 3-tuple is (left_only, right_only, diff_files).
     results = tuple([] for i in range(3))
 
-    _get_diff_paths(dir_path1, dir_path2, results)
+    _get_diff_paths(sdist_dir, project_dir, results)
 
-    right_only = results[1]
+    project_only = results[1]
     # Slice notation modifies the list in place.
-    right_only[:] = filter(lambda path: not ignore_right(path), right_only)
+    project_only[:] = filter(lambda path: not skip(path), project_only)
 
-    headers = ['Only in %s' % dir_path1,
-               'Only in %s' % dir_path2]
+    headers = ['Only in %s' % sdist_dir,
+               'Only in %s' % project_dir]
 
     strings = [format(header, sorted(paths)) for header, paths
                in zip(headers, results)]

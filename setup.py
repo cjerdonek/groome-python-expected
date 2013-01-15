@@ -201,7 +201,7 @@ def show_differences(project_dir, sdist_dir):
     Display how the sdist differs from the project directory.
 
     """
-    def ignore_in_project_dir(path):
+    def skip(path):
         dir_path, base_name = os.path.split(path)
         if (base_name.endswith('.pyc') or
             base_name in ('__pycache__', '.DS_Store')):
@@ -214,8 +214,7 @@ def show_differences(project_dir, sdist_dir):
     # TODO: see if I can change this to show ignored files if they appear
     # in the sdist directory since that would be an error.
     # TODO: add an issue task to add tests for pizza_setup functions.
-    print(utils.describe_differences(sdist_dir, project_dir,
-                                     ignore_right=ignore_in_project_dir))
+    print(utils.describe_differences(project_dir, sdist_dir, skip=skip))
 
 
 # New and customized setup() commands
