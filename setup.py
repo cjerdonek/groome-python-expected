@@ -315,6 +315,9 @@ CLASSIFIERS = (
     'Programming Language :: Python :: Implementation :: PyPy',
 )
 
+# We exclude pizza_setup to prevent it from going into the build/install.
+# This does not prevent it from going into the source distribution, where
+# it should go.
 PACKAGES = [
     'pizza',
     'pizza.scripts',
@@ -324,7 +327,6 @@ PACKAGES = [
     'pizza.test',
     'pizza.test.harness',
     'pizza.test.pizza',
-    'pizza_setup'
 ]
 
 def main(sys_argv):
