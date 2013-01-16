@@ -121,18 +121,6 @@ def _get_diff_paths(dcmp, results, skip, rel_parent_dir=''):
             filt = lambda path: True
         result_paths.extend([path for path in dcmp_paths if filt(path)])
 
-    #project_only, sdist_only, common_files, common_funny = [new_rel(attr) for attr in attrs]
-
-    # TODO: more DRY here if possible.
-    #not_skipped = results.not_skipped
-
-    #for attr in results.attrs:
-
-    #results.project_only.extend([path for path in project_only if not skip(path)])
-    #results.sdist_only.extend(sdist_only)
-    #not_skipped.extend([path for path in common_files if skip(path)])
-    #results.sdist_funny.extend(common_funny)
-
     not_skipped = results.not_skipped
     for name in dcmp.common_dirs:
         rel_path = new_rel(name)
@@ -177,14 +165,10 @@ def describe_differences(project_dir, sdist_dir, skip=None, indent='  '):
         glue = '\n' + indent
         return glue.join(strings)
 
-    # Header label and Results object attribute name.
-    header_attrs = [('Only in project', 'project_only'),
-                    ('Only in sdist', 'sdist_only'),
-                    ('Not skipped', 'not_skipped'),
-                    ('Funny in sdist', 'sdist_funny')]
+    headers = ('Only in project', 'Only in sdist', 'Not skipped', 'Funny in sdist')
 
     sections = [format(header, getattr(results, attr))
-                for header, attr in header_attrs]
+                for header, attr in zip(headers, Results.attrs)]
     return "\n".join(sections)
 
 

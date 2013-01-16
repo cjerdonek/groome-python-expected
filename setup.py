@@ -94,6 +94,7 @@ from distutils.cmd import Command
 #
 from distutils.command.upload import upload as _upload
 import filecmp
+import fnmatch
 import logging
 import os
 import sys
@@ -196,25 +197,53 @@ Run the following command and commit the changes--
     print("long_description is current: %s" % description_path)
 
 
-def show_differences(project_dir, sdist_dir):
-    """
-    Display how the sdist differs from the project directory.
+class Reporter(object):
 
-    """
-    def skip(path):
-        dir_path, base_name = os.path.split(path)
-        if (base_name.endswith('.pyc') or
-            base_name in ('__pycache__', '.DS_Store')):
-            return True
-        # distutils puts the temporary sdist directory into the source tree.
-        if path in ('.git', '.tox', 'build', 'dist', sdist_dir):
-            return True
-        return False
+    def __init__(self, project_dir, sdist_dir):
+        self.project_dir = project_dir
+        self.sdist_dir = sdist_dir
 
-    # TODO: see if I can change this to show ignored files if they appear
-    # in the sdist directory since that would be an error.
-    # TODO: add an issue task to add tests for pizza_setup functions.
-    print(utils.describe_differences(project_dir, sdist_dir, skip=skip))
+    def make_report(self):
+        """
+        Display how the sdist differs from the project directory.
+
+        """
+        def skip(path):
+            dir_path, base_name = os.path.split(path)
+            if (base_name.endswith('.pyc') or
+                base_name in ('__pycache__', '.DS_Store')):
+                return True
+            # distutils puts the temporary sdist directory (the directory from
+            # which it builds the compressed sdist) into the source tree.
+            if path in ('.git', '.tox', 'build', 'dist', self.sdist_dir):
+                return True
+            return False
+
+        # TODO: add an issue task to add tests for pizza_setup functions.
+        return utils.describe_differences(self.project_dir, self.sdist_dir,
+                                          skip=skip)
+
+    def show_report(self, report, archives, egg_dirs):
+        display = """\
+
+Listing unexpected differences between directories--
+
+  project: %s
+  sdist: %s (now in %s)
+
+%s
+""" % (self.project_dir, self.sdist_dir, archives, report)
+
+        if egg_dirs:
+            # For more information on this, see:
+            # https://bitbucket.org/tarek/distribute/issue/350
+            display += """\
+
+Note: Since an egg-info directory was present when running this command,
+the sdist may not reflect recent changes to MANIFEST.in.  Delete the
+following egg-info directory and rerun for an up-to-date listing:
+%r""" % egg_dirs
+        print(display)
 
 
 # New and customized setup() commands
@@ -250,6 +279,10 @@ class register(_register, CommandMixin):
 # This is useful in double-checking MANIFEST.in.
 class sdist(_sdist):
     def run(self):
+        # Check for the presence of a project "egg-info" directory since
+        # this can mask what the current MANIFEST.in yields.
+        egg_dirs = fnmatch.filter(os.listdir(os.curdir), '*.egg-info')
+
         # We repeat some of distutils's sdist.make_distribution() logic here.
         _saved_keep_temp = self.keep_temp
         # Tell make_distribution() not to delete the release tree from
@@ -257,14 +290,15 @@ class sdist(_sdist):
         self.keep_temp = True
         _sdist.run(self)
         base_dir = self.distribution.get_fullname()
-        _log.info("showing differences between: %s and %s" % (os.curdir,
-                  base_dir))
+        reporter = Reporter(project_dir=os.curdir, sdist_dir=base_dir)
         try:
-            show_differences(os.curdir, base_dir)
+            report = reporter.make_report()
         finally:
             self.keep_temp = _saved_keep_temp
             if not self.keep_temp:
                 distutils.dir_util.remove_tree(base_dir, dry_run=self.dry_run)
+        reporter.show_report(report, self.archive_files, egg_dirs)
+
 
 class pizza_prep(Command):
     """
