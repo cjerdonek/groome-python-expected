@@ -89,57 +89,65 @@ class Results(object):
         for attr in self.attrs:
             setattr(self, attr, [])
 
+class Differencer(object):
 
-def _get_diff_paths(dcmp, results, skip, rel_parent_dir=''):
-    """
-    Recursively examine the given directories, and modify results in place.
+    def __init__(self, skip):
+        self.skip = skip
+        # Each element is a: (dircmp attribute name, filter function)
+        # These yield the paths added to the Results object in each step of
+        # the recursive comparison.
+        self.dcmp_filters = (('left_only', lambda path: not skip(path)),
+                             ('right_only', lambda path: True),
+                             ('common_files', lambda path: skip(path)),
+                             ('common_funny', lambda path: True))
 
-    Arguments:
+    def _get_diff_paths(self, dcmp, results, rel_parent_dir=''):
+        """
+        Recursively compare the given directory pair.
 
-      roots: a (project_root, sdist_root) pair.
+        This method modifies the results object in place instead of returning
+        a value.
 
-      results: a Results object.
+        Arguments:
 
-      rel_parent_dir: the directory relative to the project/sdist root.
+          dcmp: a filecmp.dircmp object
 
-      skip: a function that accepts a path relative to the project directory
-        and returns whether that file should be skipped instead of copied.
+          results: a Results object.
 
-    """
-    new_rel = lambda name: os.path.join(rel_parent_dir, name)
+          rel_parent_dir: the directory relative to the project/sdist root.
 
-    # List of (dircmp attribute name, filter function).
-    attr_filters = (('left_only', lambda path: not skip(path)),
-                    ('right_only', None),
-                    ('common_files', lambda path: skip(path)),
-                    ('common_funny', None))
+          skip: a function that accepts a path relative to the project
+            directory and returns whether that file should be skipped instead
+            of copied.
 
-    for result_attr, (dcmp_attr, filt) in zip(Results.attrs, attr_filters):
-        result_paths = getattr(results, result_attr)
-        dcmp_paths = [new_rel(name) for name in getattr(dcmp, dcmp_attr)]
-        if filt is None:
-            filt = lambda path: True
-        result_paths.extend([path for path in dcmp_paths if filt(path)])
+        """
+        new_rel = lambda name: os.path.join(rel_parent_dir, name)
 
-    not_skipped = results.not_skipped
-    for name in dcmp.common_dirs:
-        rel_path = new_rel(name)
-        if skip(rel_path):
-            not_skipped.append(rel_path)
-        _get_diff_paths(dcmp.subdirs[name], results, skip, rel_parent_dir=rel_path)
+        for rattr, (dattr, filt) in zip(Results.attrs, self.dcmp_filters):
+            result_paths = getattr(results, rattr)
+            dcmp_paths = [new_rel(name) for name in getattr(dcmp, dattr)]
+            result_paths.extend([path for path in dcmp_paths if filt(path)])
 
+        not_skipped = results.not_skipped
+        for name in dcmp.common_dirs:
+            rel_path = new_rel(name)
+            if self.skip(rel_path):
+                not_skipped.append(rel_path)
+            self._get_diff_paths(dcmp.subdirs[name], results,
+                                 rel_parent_dir=rel_path)
 
-def get_differences(project_dir, sdist_dir, skip):
-    """
-    Return differences between directories as a Results object.
+    def get_results(self, project_dir, sdist_dir):
+        """
+        Return differences between directories as a Results object.
 
-    """
-    dcmp = filecmp.dircmp(project_dir, sdist_dir)
-    results = Results()
-    _get_diff_paths(dcmp, results, skip)
-    return results
+        """
+        dcmp = filecmp.dircmp(project_dir, sdist_dir)
+        results = Results()
+        self._get_diff_paths(dcmp, results)
+        return results
 
 
+# TODO: consider moving this formatting function to setup.py.
 def describe_differences(project_dir, sdist_dir, skip=None, indent='  '):
     """
     Describe the differences between the project and sdist directories.
@@ -155,7 +163,8 @@ def describe_differences(project_dir, sdist_dir, skip=None, indent='  '):
     if skip is None:
         skip = lambda path: False
 
-    results = get_differences(project_dir, sdist_dir, skip)
+    differencer = Differencer(skip)
+    results = differencer.get_results(project_dir, sdist_dir)
 
     def format(header, paths):
         header = '%s:' % header

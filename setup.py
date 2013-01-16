@@ -145,9 +145,7 @@ def configure_logging():
     # the error stream.
     format_string = ("%s: %%(name)s: [%%(levelname)s] %%(message)s" %
                      PACKAGE_NAME)
-
     logging.basicConfig(format=format_string, level=logging.INFO)
-
     _log.debug("Debug logging enabled.")
 
 
@@ -189,7 +187,7 @@ def check_long_description():
     if not filecmp.cmp(temp_path, description_path, shallow=False):
         error("""\
 long_description out of date: %s
-Run the following command and commit the changes--
+To update, run the following command and commit the changes--
 
     python setup.py %s
 """ % (description_path, pizza_prep.__name__))
