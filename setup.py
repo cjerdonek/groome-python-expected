@@ -259,11 +259,12 @@ class sdist(_sdist):
         base_dir = self.distribution.get_fullname()
         _log.info("showing differences between: %s and %s" % (os.curdir,
                   base_dir))
-        show_differences(os.curdir, base_dir)
-        self.keep_temp = _saved_keep_temp
-        # TODO: put this in the finally block of a try-finally.
-        if not self.keep_temp:
-            distutils.dir_util.remove_tree(base_dir, dry_run=self.dry_run)
+        try:
+            show_differences(os.curdir, base_dir)
+        finally:
+            self.keep_temp = _saved_keep_temp
+            if not self.keep_temp:
+                distutils.dir_util.remove_tree(base_dir, dry_run=self.dry_run)
 
 class pizza_prep(Command):
     """
