@@ -261,6 +261,7 @@ class sdist(_sdist):
                   base_dir))
         show_differences(os.curdir, base_dir)
         self.keep_temp = _saved_keep_temp
+        # TODO: put this in the finally block of a try-finally.
         if not self.keep_temp:
             distutils.dir_util.remove_tree(base_dir, dry_run=self.dry_run)
 

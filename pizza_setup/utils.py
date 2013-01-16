@@ -81,37 +81,75 @@ def scrape_version(package_dir):
     return version
 
 
-def _get_diff_paths(dir_path1, dir_path2, results, rel_parent_dir='',
-                    ignore=None):
+class Results(object):
+
+    attrs = ('project_only', 'sdist_only', 'not_skipped', 'sdist_funny')
+
+    def __init__(self):
+        for attr in self.attrs:
+            setattr(self, attr, [])
+
+
+def _get_diff_paths(dcmp, results, skip, rel_parent_dir=''):
     """
     Recursively examine the given directories, and modify results in place.
 
     Arguments:
 
-      results: a three-tuple of (left_only, right_only, diff_files).
+      roots: a (project_root, sdist_root) pair.
+
+      results: a Results object.
+
+      rel_parent_dir: the directory relative to the project/sdist root.
+
+      skip: a function that accepts a path relative to the project directory
+        and returns whether that file should be skipped instead of copied.
 
     """
-    if ignore is None:
-        ignore = lambda path: False
+    new_rel = lambda name: os.path.join(rel_parent_dir, name)
 
-    rewrite_name = lambda name: os.path.join(rel_parent_dir, name)
+    # List of (dircmp attribute name, filter function).
+    attr_filters = (('left_only', lambda path: not skip(path)),
+                    ('right_only', None),
+                    ('common_files', lambda path: skip(path)),
+                    ('common_funny', None))
 
-    def get_relative(names):
-        return [rewrite_name(name) for name in names if not ignore(name)]
+    for result_attr, (dcmp_attr, filt) in zip(Results.attrs, attr_filters):
+        result_paths = getattr(results, result_attr)
+        dcmp_paths = [new_rel(name) for name in getattr(dcmp, dcmp_attr)]
+        if filt is None:
+            filt = lambda path: True
+        result_paths.extend([path for path in dcmp_paths if filt(path)])
 
-    dcmp = filecmp.dircmp(dir_path1, dir_path2)
+    #project_only, sdist_only, common_files, common_funny = [new_rel(attr) for attr in attrs]
 
-    results[0].extend(get_relative(dcmp.left_only))
-    results[1].extend(get_relative(dcmp.right_only))
-    results[2].extend(get_relative(dcmp.diff_files))
+    # TODO: more DRY here if possible.
+    #not_skipped = results.not_skipped
 
-    for dir_name in dcmp.common_dirs:
-        dir1 = os.path.join(dir_path1, dir_name)
-        dir2 = os.path.join(dir_path2, dir_name)
-        new_rel_dir = rewrite_name(dir_name)
+    #for attr in results.attrs:
 
-        _get_diff_paths(dir1, dir2, results, ignore=ignore,
-                        rel_parent_dir=new_rel_dir)
+    #results.project_only.extend([path for path in project_only if not skip(path)])
+    #results.sdist_only.extend(sdist_only)
+    #not_skipped.extend([path for path in common_files if skip(path)])
+    #results.sdist_funny.extend(common_funny)
+
+    not_skipped = results.not_skipped
+    for name in dcmp.common_dirs:
+        rel_path = new_rel(name)
+        if skip(rel_path):
+            not_skipped.append(rel_path)
+        _get_diff_paths(dcmp.subdirs[name], results, skip, rel_parent_dir=rel_path)
+
+
+def get_differences(project_dir, sdist_dir, skip):
+    """
+    Return differences between directories as a Results object.
+
+    """
+    dcmp = filecmp.dircmp(project_dir, sdist_dir)
+    results = Results()
+    _get_diff_paths(dcmp, results, skip)
+    return results
 
 
 def describe_differences(project_dir, sdist_dir, skip=None, indent='  '):
@@ -129,31 +167,25 @@ def describe_differences(project_dir, sdist_dir, skip=None, indent='  '):
     if skip is None:
         skip = lambda path: False
 
-    def format(header, elements):
-        header = '%s:' % header
-        if not elements:
-            header += " none"
-        strings = [header] + sorted(elements)
-        glue = '\n' + indent
+    results = get_differences(project_dir, sdist_dir, skip)
 
+    def format(header, paths):
+        header = '%s:' % header
+        if not paths:
+            header += " none"
+        strings = [header] + sorted(paths)
+        glue = '\n' + indent
         return glue.join(strings)
 
-    # The 3-tuple is (left_only, right_only, diff_files).
-    results = tuple([] for i in range(3))
+    # Header label and Results object attribute name.
+    header_attrs = [('Only in project', 'project_only'),
+                    ('Only in sdist', 'sdist_only'),
+                    ('Not skipped', 'not_skipped'),
+                    ('Funny in sdist', 'sdist_funny')]
 
-    _get_diff_paths(sdist_dir, project_dir, results)
-
-    project_only = results[1]
-    # Slice notation modifies the list in place.
-    project_only[:] = filter(lambda path: not skip(path), project_only)
-
-    headers = ['Only in %s' % sdist_dir,
-               'Only in %s' % project_dir]
-
-    strings = [format(header, sorted(paths)) for header, paths
-               in zip(headers, results)]
-
-    return "\n".join(strings)
+    sections = [format(header, getattr(results, attr))
+                for header, attr in header_attrs]
+    return "\n".join(sections)
 
 
 def strip_html_comments(source_path):
