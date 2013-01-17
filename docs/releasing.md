@@ -41,13 +41,31 @@ First-time tasks
 
 Create a user account on PyPI if you do not already have one.  If you will
 be updating an existing package on PyPI, you also need write permissions
-on that project (i.e. to have the "Maintainer" or "Owner" role on that
-project).  A current owner of the project can grant you those permissions.
+on that project (i.e. to have the "Maintainer" or "Owner" role for the
+project).  A current project owner can grant you those permissions.
 
 TODO: .pypirc file (include example and recommendation of test server)
   - mention that server-login needed only for Distribute
   - mention bug re: not having server-login
 
+    [server-login]
+    username: <username>
+    password: <password>
+
+    [distutils]
+    index-servers =
+        pypi
+        test
+
+    [pypi]
+    repository: http://pypi.python.org/pypi
+    username: <username>
+    password: <password>
+
+    [test]
+    repository: http://testpypi.python.org/pypi
+    username: <username>
+    password: <password>
 
 
 Releasing a new version
