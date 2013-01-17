@@ -1,33 +1,34 @@
-# Non-Python-specific
-# TODO: is there a way to keep non-Python-specific stuff separate?
-.DS_Store
+# Initial file from: https://github.com/github/gitignore
+#
+# Specifically:
+# https://github.com/cjerdonek/gitignore/commit/bd8f9a76498fbf72e0baf9c52cfb51043eec07bc
 
 *.py[cod]
 
 # C extensions
 *.so
 
-# Packages
-*.egg
-*.egg-info
-dist
-build
-eggs
-parts
-bin
-var
-sdist
-develop-eggs
+# Distribution/packaging
+bin/
+build/
+develop-eggs/
+dist/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
 .installed.cfg
-lib
-lib64
+*.egg
 
 # Installer logs
 pip-log.txt
 
 # Unit test / coverage reports
+.tox/
 .coverage
-.tox
 nosetests.xml
 
 # Translations
@@ -37,6 +38,12 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+
+## Pizza additions
+
+# Non-Python-specific
+# TODO: is there a way to keep non-Python-specific stuff separate?
+.DS_Store
 
 # Pizza-specific
 *.temp.md
