@@ -8,6 +8,10 @@ configuration data to unittest.TestCase classes without relying on
 global variables.  The configuration data can be accessed from within
 TestCase objects as `self.test_config`.
 
+To use this API, the unittest.TestLoader object that you pass to your
+unittest.TestProgram class must have a test_config attribute set to the
+object with which you would like to store configuration data.
+
 Usage:
 
 Simply include the following (or something equivalent):
