@@ -10,7 +10,6 @@ import logging
 import os
 
 ENCODING_DEFAULT = 'utf-8'
-TEMP_EXTENSION = '.temp'
 
 _log = logging.getLogger(os.path.basename(__name__))
 
@@ -29,6 +28,15 @@ def read(path, encoding=None):
 
     return b.decode(encoding)
 
+
+def _write(b, path):
+    """
+    Write bytes to a path.
+
+    """
+    with open(path, 'wb') as f:
+        f.write(b)
+
 def write(u, path, encoding=None, description=None):
     """
     Write a unicode string to a file.
@@ -41,9 +49,17 @@ def write(u, path, encoding=None, description=None):
     _log.info("writing %sto: %s" % (desc, path))
     # This implementation was chosen to be compatible across Python 2/3.
     b = u.encode(encoding)
-    with open(path, 'wb') as f:
-        f.write(b)
-
+    try:
+        _write(b, path)
+    except IOError:
+        # Retry if directory wasn't there a la EAFP.
+        dirname = os.path.dirname(path)
+        if not os.path.exists(dirname):
+            _log.info("creating directory: %s" % dirname)
+            os.makedirs(dirname)
+            _write(b, path)
+        else:
+            raise
 
 # In setup.py, scraping the version number from the package is preferable to
 # importing the package because setup.py should not have to be able to
@@ -207,7 +223,7 @@ def strip_html_comments(source_path):
     return "".join(new_lines)
 
 
-def make_temp_path(path, new_ext=None):
+def make_temp_path(path, temp_dir, label=None, new_ext=None):
     """
     Arguments:
 
@@ -215,12 +231,14 @@ def make_temp_path(path, new_ext=None):
         Defaults to preserving the file extension.
 
     """
-    root, ext = os.path.splitext(path)
+    if label is None:
+        label = ''
+    basename = os.path.basename(path)
+    name, ext = os.path.splitext(basename)
     if new_ext is None:
         new_ext = ext
-    temp_path = root + TEMP_EXTENSION + new_ext
-
-    return temp_path
+    name = "%s%s%s" % (name, label, new_ext)
+    return os.path.join(temp_dir, name)
 
 
 def _write_md_to_rst(source_path, target_path, docstring_path):
@@ -274,7 +292,8 @@ def convert_md_to_rst(source_path, temp_rst_path, docstring_path):
     return "".join(lines)
 
 
-def update_description_file(source_paths, target_path, docstring_path):
+def update_description_file(source_paths, target_path, docstring_path,
+                            temp_dir='temp'):
     """
     Write the long_description needed for setup.py to a file.
 
@@ -289,12 +308,11 @@ def update_description_file(source_paths, target_path, docstring_path):
     md_description = '\n\n'.join(sections)
 
     md_ext = os.path.splitext(source_paths[0])[1]  # e.g. '.md'
-    temp_md_path = make_temp_path(target_path, new_ext=md_ext)
-
+    temp_md_path = make_temp_path(target_path, temp_dir=temp_dir,
+                                  label=".prelim", new_ext=md_ext)
     write(md_description, temp_md_path, encoding='utf-8',
           description='preliminary long_description')
-
-    temp_rst_path = make_temp_path(target_path)
+    temp_rst_path = make_temp_path(target_path, temp_dir=temp_dir)
     rst_description = convert_md_to_rst(source_path=temp_md_path,
                                         temp_rst_path=temp_rst_path,
                                         docstring_path=docstring_path)

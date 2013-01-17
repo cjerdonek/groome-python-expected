@@ -12,6 +12,11 @@ https://github.com/cjerdonek/groome-python-expected
 
 """
 
+# This is a hack to make it easier to enable distutils's debug mode.  This
+# code must come before importing from distutils.
+# See also: http://docs.python.org/2/distutils/setupscript.html#debugging-the-setup-script
+import os
+os.environ['DISTUTILS_DEBUG'] = "1"  # "" for False or "1" for True.
 
 # We use setuptools/Distribute because distutils does not seem to support
 # the following arguments to setUp().  Passing these arguments to
@@ -32,6 +37,7 @@ from distutils.cmd import Command
 #   https://bitbucket.org/tarek/distribute/issue/348
 #
 from distutils.command.upload import upload as _upload
+import distutils.debug as distutils_debug
 import filecmp
 import fnmatch
 import logging
@@ -40,12 +46,10 @@ import sys
 
 import pizza_setup.utils as utils
 
-
-dist_version = None
-
 # TODO: explore whether I can support distutils (at least for installers).
 # This boolean is temporary for more convenient testing/experimentation.
 USE_DISTRIBUTE = True
+dist_version = None
 
 if USE_DISTRIBUTE:
     # Distribute does not seem to support the -r/--repository option
@@ -70,6 +74,7 @@ PACKAGE_NAME = 'pizza'
 
 README_PATH = 'README.md'
 HISTORY_PATH = 'HISTORY.md'
+TEMP_DIR = 'temp'
 LONG_DESCRIPTION_PATH = 'setup_long_description.rst'
 
 _log = logging.getLogger(os.path.basename(__file__))
@@ -119,8 +124,7 @@ def check_long_description():
 
     """
     description_path = LONG_DESCRIPTION_PATH
-    # TODO: change the temp_paths to go in a temp/ directory.
-    temp_path = utils.make_temp_path(description_path)
+    temp_path = utils.make_temp_path(description_path, temp_dir=TEMP_DIR)
     write_long_description(temp_path)
 
     if not filecmp.cmp(temp_path, description_path, shallow=False):
