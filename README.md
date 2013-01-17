@@ -73,8 +73,8 @@ To run project tests (which are already stubbed out):
 For Maintainers
 ---------------
 
-See the module docstring of `setup.py` for instructions on preparing and
-pushing new versions to PyPI.
+For instructions on releasing Pizza and on how to use `setup.py`, consult
+the `releasing.md` file in the `docs` folder of a source distribution.
 
 
 Author
