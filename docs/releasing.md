@@ -1,11 +1,10 @@
-How to release Pizza
-====================
+Releasing Pizza
+===============
 
 This document contains step-by-step instructions for Pizza maintainers on
 how to release both the first version and new versions of Pizza.
-
-For instructions on installing or on how to contribute to the project
-or use the application, consult the README or the
+For installation instructions or instructions on how to contribute to the
+project or use the application, consult the README or the
 [project page](https://github.com/cjerdonek/groome-python-expected).
 
 
@@ -13,9 +12,8 @@ Background
 ----------
 
 This document explains how to distribute Pizza via the Python Package Index,
-or [PyPI](http://pypi.python.org/pypi) (pronounced Pie-pee-EYE).  Putting a
-project on PyPI correctly lets users install your project very simply by
-typing:
+or [PyPI](http://pypi.python.org/pypi) (pronounced Pie-pee-EYE).  Correctly
+putting your project on PyPI lets users install your project simply by typing:
 
     $ pip install pizza
 
@@ -30,7 +28,6 @@ Distribute is an extension of the Python standard library's
 [distutils](http://docs.python.org/distutils/index.html) module with
 some added features.  Distribute shows up as a module called `setuptools`
 since Distribute is a replacement of an older module called `setuptools`.
-
 For basic background information on `setup.py` and related concepts,
 consult the `distutils` and Distribute documentation linked to above.
 
