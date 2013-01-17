@@ -2,13 +2,25 @@ How to release Pizza
 ====================
 
 This document contains step-by-step instructions for Pizza maintainers on
-how to release the first version and new versions of Pizza.  For
-installation and usage instructions, consult the README or the
+how to release both the first version and new versions of Pizza.
+
+For instructions on installing or on how to contribute to the project
+or use the application, consult the README or the
 [project page](https://github.com/cjerdonek/groome-python-expected).
 
 
 Background
 ----------
+
+This document explains how to distribute Pizza via the Python Package Index,
+or [PyPI](http://pypi.python.org/pypi) (pronounced Pie-pee-EYE).  Putting a
+project on PyPI correctly lets users install your project very simply by
+typing:
+
+    $ pip install pizza
+
+See the [PyPI documentation](http://docs.python.org/distutils/packageindex.html)
+on the Python web site for more information on PyPI.
 
 The release process documented here assumes that you have already installed
 [Distribute](http://pypi.python.org/pypi/distribute).  We recommend version
@@ -21,7 +33,24 @@ since Distribute is a replacement of an older module called `setuptools`.
 
 For basic background information on `setup.py` and related concepts,
 consult the `distutils` and Distribute documentation linked to above.
-Also look at the `setup.py` source code to see how things are done.
+
+Also look at the `setup.py` source code to see how things are done.  You
+should feel free to modify `setup.py` at any point in the release process
+to better fit your needs.
+
+
+First-time tasks
+----------------
+
+Create a user account on PyPI if you do not already have one.  If you will
+be updating an existing package on PyPI, you also need write permissions
+on that project (i.e. to have the "Maintainer" or "Owner" role on that
+project).  A current owner of the project can grant you those permissions.
+
+TODO: .pypirc file (include example and recommendation of test server)
+  - mention that server-login needed only for Distribute
+  - mention bug re: not having server-login
+
 
 
 Releasing a new version
@@ -99,10 +128,6 @@ Make sure your code is checked in and merged to the right branch.
 
 
 TODO:
-
-* .pypirc file (include example and recommendation of test server)
-  - mention that server-login needed only for Distribute
-  - mention bug re: not having server-login
 
 * register
 
