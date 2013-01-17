@@ -3,8 +3,8 @@ Releasing Pizza
 
 This document contains step-by-step instructions for Pizza maintainers on
 how to release both the first version and new versions of Pizza.
-For installation instructions or instructions on how to contribute to the
-project or use the application, consult the README or the
+For installation instructions or for instructions on how to contribute to the
+project or use the application, consult the README or
 [project page](https://github.com/cjerdonek/groome-python-expected).
 
 

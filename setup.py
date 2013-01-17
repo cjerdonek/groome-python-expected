@@ -160,7 +160,6 @@ class Reporter(object):
                 return True
             return False
 
-        # TODO: add an issue task to add tests for pizza_setup functions.
         return utils.describe_differences(self.project_dir, self.sdist_dir,
                                           skip=skip)
 
@@ -288,6 +287,9 @@ CLASSIFIERS = (
     'Programming Language :: Python',
     'Programming Language :: Python :: 2',
     'Programming Language :: Python :: 2.7',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3.2',
+    'Programming Language :: Python :: 3.3',
     'Programming Language :: Python :: Implementation :: PyPy',
 )
 
