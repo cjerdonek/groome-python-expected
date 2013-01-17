@@ -36,17 +36,26 @@ should feel free to modify `setup.py` at any point in the release process
 to better fit your needs.
 
 
-First-time tasks
-----------------
+Setup
+-----
+
+This section describes things you need to do once before getting started.
 
 Create a user account on PyPI if you do not already have one.  If you will
 be updating an existing package on PyPI, you also need write permissions
 on that project (i.e. to have the "Maintainer" or "Owner" role for the
 project).  A current project owner can grant you those permissions.
 
-TODO: .pypirc file (include example and recommendation of test server)
-  - mention that server-login needed only for Distribute
-  - mention bug re: not having server-login
+We also recommend creating a user account on the
+[test PyPI server](http://testpypi.python.org/pypi) on which you can
+try things out.
+
+The [`.pypirc` file](http://docs.python.org/dev/distutils/packageindex.html#the-pypirc-file)
+is a plain-text file that stores your PyPI credentials.  The `setup.py`
+script uses it when you interact with PyPI via the command-line.
+
+We recommend creating a file like the following, which also configures
+access to the test server.  It should be placed in your home directory:
 
     [server-login]
     username: <username>
@@ -66,6 +75,10 @@ TODO: .pypirc file (include example and recommendation of test server)
     repository: http://testpypi.python.org/pypi
     username: <username>
     password: <password>
+
+The `[server-login]` section is for better compatibility with Distribute.
+For example, see this Distribute
+[bug report](https://bitbucket.org/tarek/distribute/issue/346/upload-fails-without-server-login-but).
 
 
 Releasing a new version
