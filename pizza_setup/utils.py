@@ -91,6 +91,8 @@ class Results(object):
 
 class Differencer(object):
 
+    """Comparse project directories to generated sdist directories."""
+
     def __init__(self, skip):
         self.skip = skip
         # Each element is a: (dircmp attribute name, filter function)
