@@ -4,7 +4,7 @@ Releasing Pizza
 This document contains step-by-step instructions for Pizza maintainers on
 how to release both the first version and new versions of Pizza.
 For installation instructions or for instructions on how to contribute to the
-project or use the application, consult the README or
+project or use the application, instead consult the README or
 [project page](https://github.com/cjerdonek/groome-python-expected).
 
 
@@ -48,7 +48,8 @@ project).  A current project owner can grant you those permissions.
 
 We also recommend creating a user account on the
 [test PyPI server](http://testpypi.python.org/pypi) on which you can
-try things out.
+try things out.  The `-r/--repository` option to `setup.py` lets you
+specify this server.
 
 The [`.pypirc` file](http://docs.python.org/dev/distutils/packageindex.html#the-pypirc-file)
 is a plain-text file that stores your PyPI credentials.  The `setup.py`
@@ -76,9 +77,9 @@ access to the test server.  It should be placed in your home directory:
     username: <username>
     password: <password>
 
-The `[server-login]` section is for better compatibility with Distribute.
-For example, see this Distribute
-[bug report](https://bitbucket.org/tarek/distribute/issue/346/upload-fails-without-server-login-but).
+The `[server-login]` section is needed only for increased compatibility
+with Distribute.  Without it, Distribute doesn't always work. For example,
+see this Distribute [bug report](https://bitbucket.org/tarek/distribute/issue/346/upload-fails-without-server-login-but).
 
 
 Releasing a new version
