@@ -12,6 +12,7 @@ include runpizza.py
 include setup_long_description.rst
 include TODO.md
 include tox.ini
+recursive-include docs *.md
 # We include pizza_setup in MANIFEST.in but not in setup()'s `packages`
 # argument to include pizza_setup in the source distribution but not
 # in the build/install.

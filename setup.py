@@ -76,6 +76,8 @@ README_PATH = 'README.md'
 HISTORY_PATH = 'HISTORY.md'
 TEMP_DIR = 'temp'
 LONG_DESCRIPTION_PATH = 'setup_long_description.rst'
+# Top-level names to skip when displaying sdist differences.
+SDIST_NAMES_TO_SKIP = ('.git', '.tox', 'build', 'dist', 'temp')
 
 _log = logging.getLogger(os.path.basename(__file__))
 
@@ -156,7 +158,7 @@ class Reporter(object):
                 return True
             # distutils puts the temporary sdist directory (the directory from
             # which it builds the compressed sdist) into the source tree.
-            if path in ('.git', '.tox', 'build', 'dist', self.sdist_dir):
+            if path in SDIST_NAMES_TO_SKIP or path == self.sdist_dir:
                 return True
             return False
 
@@ -293,20 +295,6 @@ CLASSIFIERS = (
     'Programming Language :: Python :: Implementation :: PyPy',
 )
 
-# We exclude pizza_setup to prevent it from going into the build/install.
-# This does not prevent it from going into the source distribution, where
-# it should go.
-PACKAGES = [
-    'pizza',
-    'pizza.scripts',
-    'pizza.scripts.pizza',
-    'pizza.scripts.pizza.general',
-    # The following packages are only for testing.
-    'pizza.test',
-    'pizza.test.harness',
-    'pizza.test.pizza',
-]
-
 def main(sys_argv):
     """
     Call setup() with the correct arguments.
@@ -322,6 +310,13 @@ def main(sys_argv):
 
     long_description = get_long_description()
     extra_args = get_extra_args()
+    # We don't include pizza_setup to prevent it from going into the
+    # build/install.  This does not prevent it from going into the source
+    # distribution, where it should go (which we do via the MANIFEST.in file).
+    # Also, we currently include the test subpackages.  For information on
+    # excluding test packages, see:
+    # http://packages.python.org/distribute/setuptools.html#using-find-packages
+    packages = setuptools.find_packages()
 
     if extra_args:
         _log.info('including extra kwargs: %r' % extra_args)
@@ -334,7 +329,7 @@ def main(sys_argv):
           author='Chris Jerdonek',
           author_email='chris.jerdonek@gmail.com',
           url='https://github.com/cjerdonek/groome-python-expected',
-          packages=PACKAGES,
+          packages=packages,
           classifiers=CLASSIFIERS,
           cmdclass = {pizza_prep.__name__: pizza_prep,
                       'register': register,
