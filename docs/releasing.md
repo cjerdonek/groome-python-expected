@@ -3,8 +3,8 @@ Releasing Pizza
 
 This document contains step-by-step instructions for Pizza maintainers on
 how to release both the first version and new versions of Pizza.
-For installation instructions or for instructions on how to contribute to the
-project or use the application, instead consult the README or
+For installation instructions or for instructions on contributing to the
+project or using the application, instead consult the README or
 [project page](https://github.com/cjerdonek/groome-python-expected).
 
 
@@ -32,8 +32,8 @@ For basic background information on `setup.py` and related concepts,
 consult the `distutils` and Distribute documentation linked to above.
 
 Also look at the `setup.py` source code to see how things are done.  You
-should feel free to modify `setup.py` at any point in the release process
-to better fit your needs.
+should feel free to modify `setup.py` and its supporting code to better fit
+your needs.
 
 
 Setup
@@ -53,9 +53,8 @@ specify this server.
 
 The [`.pypirc` file](http://docs.python.org/dev/distutils/packageindex.html#the-pypirc-file)
 is a plain-text file that stores your PyPI credentials.  The `setup.py`
-script uses it when you interact with PyPI via the command-line.
-
-We recommend creating a file like the following, which also configures
+script uses it when you interact with PyPI via the command-line.  We recommend
+starting out with a `.pypirc` file like the following, which also enables
 access to the test server.  It should be placed in your home directory:
 
     [server-login]
@@ -82,16 +81,29 @@ with Distribute.  Without it, Distribute doesn't always work. For example,
 see this Distribute [bug report](https://bitbucket.org/tarek/distribute/issue/346/upload-fails-without-server-login-but).
 
 
-Releasing a new version
------------------------
+Release a new version
+---------------------
 
-This section walks maintainers through the steps you should take to deploy
-a new release of this project to PyPI (pypi.python.org).
+This section describes steps to release a new version of Pizza, once the
+setup steps above have been followed:
+
+1. Finalize source
+2. Merge to release branch
+3. Register release on PyPI
+4. Upload release to PyPI
+5. Tag the commit
 
 
-* prerequisite: get a PyPI account and make sure you have permissions
+### 1. Finalize source
 
-### 1. Finalize the code
+TODO: some sub-steps:
+
+1. Tests pass
+2. Close issues
+3. Update `HISTORY.md` file
+4. Double-check `MANIFEST.in`
+5. Bump version number
+6. Update `long_description` file
 
 Make sure the code is finalized: that the tests pass, the version number
 in the package's __init__.py is bumped, the HISTORY file is updated,
@@ -121,7 +133,7 @@ generating the sdist, this module's sdist command prints a report of how
 the project directory differs from the created sdist directory.
 
 
-### Update the long_description file
+#### Update the long_description file
 
 The long_description argument to setup() is stored in a source file.
 Update and commit this file before pushing to PyPI.  To update the file:
@@ -151,16 +163,40 @@ Also see:
 You can also view the long description file on GitHub as a sanity check.
 
 
-### 3. Merge your code
-
-Make sure your code is checked in and merged to the right branch.
-
+### 2. Merge to release branch
 
 TODO:
 
-* register
+* Discuss master/development
+* Okay to make changes after this
+* May want to wait a bit before next step
 
-* upload
 
-* Tag your commit and push your tag.
+### 3. Register release on PyPI
 
+TODO:
+
+* Okay to redo this step
+
+
+### 4. Upload release to PyPI
+
+TODO:
+
+* Delete untracked files to avoid including extra files
+* Repeat all of steps above for new version if mistake was made.
+
+
+### 5. Tag the commit
+
+Here is a cheat-sheet for creating tags with Git.  List current tags:
+
+    $ git tag -l -n3
+
+Create an annotated tag:
+
+    $ git tag -a -m "version description" "0.1.0"
+
+Push a tag to GitHub:
+
+    $ git push --tags <repository> 0.1.0
