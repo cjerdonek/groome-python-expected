@@ -1,11 +1,11 @@
 Releasing Pizza
 ===============
 
-This document contains step-by-step instructions for Pizza maintainers on
-how to release both the first version and new versions of Pizza.
-For installation instructions or for instructions on contributing to the
-project or using the application, instead consult the README or
-[project page](https://github.com/cjerdonek/groome-python-expected).
+This document contains detailed step-by-step instructions for Pizza maintainers
+on how to release both the first version and new versions of Pizza.
+For instructions on installing or using the application or for instructions
+on contributing, consult the README or
+[project page](https://github.com/cjerdonek/groome-python-expected) instead.
 
 
 Background
@@ -31,25 +31,37 @@ since Distribute is a replacement of an older module called `setuptools`.
 For basic background information on `setup.py` and related concepts,
 consult the `distutils` and Distribute documentation linked to above.
 
-Also look at the `setup.py` source code to see how things are done.  You
-should feel free to modify `setup.py` and its supporting code to better fit
-your needs.
+Also look at the project's `setup.py` file to see how things work.  You should
+feel free to modify and improve `setup.py` and its supporting code to better
+fit your needs.
 
 
 Setup
 -----
 
-This section describes things you need to do once before getting started.
+This section describes setup steps that you need to do only once.  Roughly,
 
-Create a user account on PyPI if you do not already have one.  If you will
-be updating an existing package on PyPI, you also need write permissions
-on that project (i.e. to have the "Maintainer" or "Owner" role for the
-project).  A current project owner can grant you those permissions.
+1. Create PyPI user accounts
+2. Create `.pypirc` file
 
-We also recommend creating a user account on the
+
+### 1. Set up PyPI user accounts
+
+Create a user account and user account on PyPI if you do not already
+have them.
+
+The We also recommend creating a user account on the
 [test PyPI server](http://testpypi.python.org/pypi) on which you can
 try things out.  The `-r/--repository` option to `setup.py` lets you
 specify this server.
+
+
+If you will be updating an existing package on PyPI, you also need write
+permissions
+on that project (i.e. to have the "Maintainer" or "Owner" role for the
+project).  A current project owner can grant you those permissions.
+
+### 2. Create `.pypirc` file
 
 The [`.pypirc` file](http://docs.python.org/dev/distutils/packageindex.html#the-pypirc-file)
 is a plain-text file that stores your PyPI credentials.  The `setup.py`
@@ -84,11 +96,12 @@ see this Distribute [bug report](https://bitbucket.org/tarek/distribute/issue/34
 Release a new version
 ---------------------
 
-This section describes steps to release a new version of Pizza, once the
-setup steps above have been followed:
+This section describes in detail the steps to release a new version of Pizza,
+assuming the above setup steps have been followed.  At a high level, the steps
+are roughly as follows:
 
 1. Finalize source
-2. Merge to release branch
+2. Merge to release branch, if necessary
 3. Register release on PyPI
 4. Upload release to PyPI
 5. Tag the commit
@@ -96,21 +109,34 @@ setup steps above have been followed:
 
 ### 1. Finalize source
 
-TODO: some sub-steps:
+This section describes steps to prepare the source code for release.  Most
+of these steps involve committing changes to files.
 
-1. Tests pass
-2. Close issues
-3. Update `HISTORY.md` file
-4. Double-check `MANIFEST.in`
+In many workflows, the source code is normally in a non-release branch at
+this time (e.g. in a `development` branch).  One exception is if the code
+has already been merged to the release branch but additional finalizations
+are found needed.
+
+At a high level, the tasks in this section are--
+
+1. Review issues
+2. Update HISTORY file
+3. Double-check `MANIFEST.in` file
+4. Make sure tests pass
 5. Bump version number
 6. Update `long_description` file
 
-Make sure the code is finalized: that the tests pass, the version number
-in the package's __init__.py is bumped, the HISTORY file is updated,
-MANIFEST.in is updated, etc.
+#### 1.1 Review issues
 
-For versioning your project, you may want to consider semantic versioning:
-http://semver.org.
+TODO
+
+#### 1.2 Update HISTORY file
+
+TODO
+
+#### 1.3 Double-check `MANIFEST.in` file
+
+TODO
 
 Regarding the manifest file, MANIFEST.in is a file that tells setup.py
 what files to include in your source distribution, in addition to any
@@ -133,7 +159,19 @@ generating the sdist, this module's sdist command prints a report of how
 the project directory differs from the created sdist directory.
 
 
-#### Update the long_description file
+#### 1.4. Make sure tests pass
+
+TODO
+
+#### 1.5. Bump version number
+
+TODO
+
+For versioning your project, you may want to consider semantic versioning:
+http://semver.org.
+
+
+#### 1.6 Update `long_description` file
 
 The long_description argument to setup() is stored in a source file.
 Update and commit this file before pushing to PyPI.  To update the file:
