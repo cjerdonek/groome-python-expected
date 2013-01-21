@@ -24,5 +24,12 @@ def run_tests():
     config = TestConfig(temp_dir="TODO")
     loader = loading.TestLoader()
     loader.test_config = config
-    unittest.main(module="pizza.test.pizza.test_pizza", argv=["prog"],
-                  testLoader=loader)
+    TestPizza(module="pizza.test.pizza.test_pizza", argv=["prog"],
+              testLoader=loader)
+
+
+class TestPizza(unittest.TestProgram):
+    def parseArgs(self, argv):
+        # TODO: switch to debug logging here.
+        print(repr(argv))
+        super(TestPizza, self).parseArgs(argv)
