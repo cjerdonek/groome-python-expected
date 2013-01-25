@@ -33,10 +33,6 @@ Supports logging configuration.
 """
 
 import logging
-import os
-import sys
-
-_log = logging.getLogger(__name__)
 
 
 class RememberingStream(object):
@@ -68,14 +64,18 @@ class RememberingStream(object):
 class NewlineStreamHandler(logging.StreamHandler):
 
     """
-    A logging handler that begins log messages with a newline if needed.
+    A log handler whose log messages always start at the beginning of a line.
 
-    This class is useful for preventing messages logged during test runs
-    from displaying at the end of a line of dots "......".
+    This class is useful for preventing output like the following during
+    unittest runs:
+
+    ........................log: [INFO] foo
+    ..................................................
 
     The stream attribute (i.e. the stream passed to this class's
     constructor) must implement stream.last_char().
 
+    See also CPython issue #16889: http://bugs.python.org/issue16889
     """
 
     def emit(self, record):
@@ -83,67 +83,3 @@ class NewlineStreamHandler(logging.StreamHandler):
             self.stream.write("\n")
 
         super(NewlineStreamHandler, self).emit(record)
-
-
-# TODO: make this testable.
-# TODO: finish documenting this method.
-# TODO: improve parameter names.
-# TODO: consider using filters instead of passing explicit loggers.
-def configure_logging(logging_level, persistent_loggers=None,
-                      stderr_stream=None, test_config=False):
-    """
-    Configure logging.
-
-    If in test mode, adds a null handler to the root logger to prevent the
-    following message from being written while running tests:
-
-      'No handlers could be found for logger...'
-
-    Arguments:
-
-      persistent_loggers: the loggers that should always log.
-
-    """
-    if stderr_stream is None:
-        stderr_stream = sys.stderr
-
-    root_logger = logging.getLogger()  # the root logger.
-    root_logger.setLevel(logging_level)
-    #root_logger.addHandler(logging.NullHandler())
-
-    class Filter(object):
-        def filter(self, record):
-            name = record.name
-            if name.startswith("pizza.scripts"):
-                return True
-            return False
-
-    #root_logger.addFilter(filt)
-
-    if test_config:
-        # Then configure log messages to be swallowed by default.
-        # TODO: is this necessary?
-        handler = logging.NullHandler()
-        root_logger.addHandler(handler)
-
-        # Set the loggers to display during test runs.
-        visible_loggers = [_log] + persistent_loggers
-    else:
-        temp_log = logging.getLogger("pizza.temp")
-        visible_loggers = [root_logger]
-
-    # Prefix log messages unobtrusively with "log" to distinguish log
-    # messages more obviously from other text sent to the error stream.
-    format_string = "log: %(name)s: [%(levelname)s] %(message)s"
-    formatter = logging.Formatter(format_string)
-
-    handler = NewlineStreamHandler(stderr_stream)
-    handler.setFormatter(formatter)
-    handler.addFilter(Filter())
-
-    for logger in visible_loggers:
-        logger.addHandler(handler)
-
-    _log.debug("Debug logging enabled.")
-    temp_log.error("testing...")
-    _log.debug("Visible loggers: %s" % repr([logger.name for logger in visible_loggers]))

@@ -3,33 +3,133 @@ Provides the function for the main setup.py console_script.
 
 """
 
-from __future__ import absolute_import
-
+import logging
 import sys
 
-from pizza import pizza
+import pizza.pizza as _pizza
+import pizza.scripts
+import pizza.scripts.pizza.argparsing as argparsing
+import pizza.scripts.pizza.general.logconfig as logconfig
 import pizza.test.harness.main as harness
-from pizza.scripts.pizza import argparsing
 
-def run_tests():
-    harness.run_tests()
+
+LOGGING_LEVEL_DEFAULT = logging.INFO
+
+# TODO: should this be made public with a better name?
+log = logging.getLogger("pizza.script")
+# Loggers that should display during testing.
+test_logger_names = (logger.name for logger in (log, harness.log))
+
+
+# TODO: make this testable.
+# TODO: finish documenting this method.
+# TODO: improve parameter names.
+def _configure_logging(level=None, stream=None, is_testing=False,
+                       is_verbose=False):
+    """
+    Arguments:
+
+      level: lowest logging level to log.
+      stream: the stream to which to log (e.g. sys.stderr).
+
+    """
+    if stream is None:
+        stream = sys.stderr
+
+    level = logging.DEBUG if is_verbose else LOGGING_LEVEL_DEFAULT
+
+    # We pass a newline as last_text to prevent a newline from being added
+    # before the first log message.
+    rstream = logconfig.RememberingStream(stream, last_text='\n')
+    handler = logconfig.NewlineStreamHandler(rstream)
+
+    if is_testing:
+        # Then only log designated test loggers.
+        class Filter(object):
+            def filter(self, record):
+                return record.name in test_logger_names
+        handler.addFilter(Filter())
+    if not is_verbose:
+        # Then shorten the logger name if long.
+        class Filter(object):
+            def filter(self, record):
+                """Set record.truncated_name."""
+                parts = record.name.split(".")
+                if len(parts) <= 3:
+                    truncated_name = record.name
+                else:
+                    truncated_name = '.'.join(parts[:2] + ['.', parts[-1]])
+                record.truncated_name = truncated_name
+                return True
+        handler.addFilter(Filter())
+
+    # Prefix log messages unobtrusively with "log" to distinguish log
+    # messages more obviously from other text sent to the error stream.
+    format_string = ("log: %%(%s)s: [%%(levelname)s] %%(message)s" %
+                     ('name' if is_verbose else 'truncated_name'))
+
+    formatter = logging.Formatter(format_string)
+    handler.setFormatter(formatter)
+
+    root = logging.getLogger()
+    root.setLevel(level)
+    # Adding at least one handler to the root logger prevents the following
+    # message from ever being logged:
+    # "No handlers could be found for logger..."
+    root.addHandler(handler)
+
+    log.debug("Debug logging enabled.")
+
+def configure_logging(sys_argv, sys_stderr=None):
+    """
+    Configure logging and return whether to run in verbose mode.
+
+    """
+    if sys_stderr is None:
+        sys_stderr = sys.stderr
+
+    is_testing = False
+    is_verbose = False
+
+    # Configure logging before parsing arguments for real.
+    ns = argparsing.preparse_args(sys_argv)
+
+    if ns is not None:
+        # Then args parsed without error.
+        is_verbose = ns.verbose
+        if ns.run_tests:
+            is_testing = True
+
+    # TODO: reconsider the argument names here.
+    _configure_logging(stream=sys_stderr, is_testing=is_testing,
+                       is_verbose=is_verbose)
+
+    return is_verbose, sys_stderr
 
 def main_inner(sys_argv=None):
     """Run the program and return the status code."""
     if sys_argv is None:
         sys_argv = sys.argv
+
+    verbose, stderr_stream = configure_logging(sys_argv)
+
+    # TODO: add the try-except from Molt.
+
     ns = argparsing.parse_args(sys_argv)
 
     if ns.run_tests:
-        run_tests()
+        harness.run_tests(sys_argv)
     else:
         values = ns.args
-        result = pizza.run(values)
+        result = _pizza.run(values)
         print(result)
 
     # TODO: return the right status code as appropriate.
     return 0
 
+# TODO: follow all of the recommendations here:
+# http://www.artima.com/weblogs/viewpost.jsp?thread=4829
+# Keep this link for reference even after following the guidance.
 def main(sys_argv=None, from_source=False, **kwargs):
     """
     Arguments:

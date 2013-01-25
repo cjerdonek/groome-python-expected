@@ -5,8 +5,6 @@ Contains argument-parsing code and command-line documentation.
 
 """
 
-from __future__ import absolute_import
-
 import argparse
 import sys
 
@@ -97,12 +95,12 @@ def preparse_args(sys_argv):
     This function allows one to have access to the command-line options
     before configuring logging (in particular before exception logging).
 
-    Returns a Namespace object.
+    Returns a Namespace object, or None if UsageError.
 
     """
     try:
         # Suppress the help option to prevent exiting.
-        ns = parse_args(sys_argv, None, suppress_help_exit=True)
+        ns = parse_args(sys_argv, suppress_help_exit=True)
     except UsageError:
         # Any usage error will occur again during the real parse.
         return None
