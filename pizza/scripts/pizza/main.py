@@ -4,6 +4,7 @@ Provides the function for the main setup.py console_script.
 """
 
 import logging
+import os
 import sys
 
 import pizza.pizza as _pizza
@@ -18,7 +19,7 @@ LOGGING_LEVEL_DEFAULT = logging.INFO
 # TODO: should this be made public with a better name?
 log = logging.getLogger("pizza.script")
 # Loggers that should display during testing.
-test_logger_names = (logger.name for logger in (log, harness.log))
+test_logger_names = [logger.name for logger in (log, harness.log)]
 
 
 # TODO: make this testable.
@@ -78,7 +79,7 @@ def _configure_logging(level=None, stream=None, is_testing=False,
     # "No handlers could be found for logger..."
     root.addHandler(handler)
 
-    log.debug("Debug logging enabled.")
+    log.debug("debug logging enabled")
 
 def configure_logging(sys_argv, sys_stderr=None):
     """
@@ -115,10 +116,16 @@ def main_inner(sys_argv=None):
 
     # TODO: add the try-except from Molt.
 
+    log.debug("argv: %r" % sys_argv)
     ns = argparsing.parse_args(sys_argv)
+    log.debug("parsed args: %r" % ns)
+    log.debug("cwd: %r" % os.getcwd())
 
-    if ns.run_tests:
-        harness.run_tests(sys_argv)
+    if ns.run_tests is not None:  # Then it is a list.
+        start_dir = os.path.dirname(pizza.__file__)
+        test_argv = ([sys_argv[0], 'discover', '--start-directory',
+                      start_dir] + ns.run_tests)
+        harness.run_tests(test_argv)
     else:
         values = ns.args
         result = _pizza.run(values)

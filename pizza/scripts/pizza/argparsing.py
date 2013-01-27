@@ -19,7 +19,7 @@ METAVAR_INPUT_DIR = 'DIRECTORY'
 FLAGS_CHECK_EXPECTED = Option(('--check-output', ))
 FLAGS_HELP = Option(('-h', '--help'))
 FLAGS_LICENSE = Option(('--license', ))
-FLAGS_MODE_TESTS = Option(('-T', '--run-tests', ))
+FLAGS_MODE_TESTS = Option(('--run-tests', '-T', ))
 FLAGS_SOURCE_DIR = Option(('--dev-source-dir', ))
 FLAGS_VERBOSE = Option(('-v', '--verbose'))
 
@@ -63,6 +63,7 @@ HELP_STRINGS = {
     'args': """\
 zero more input values.
 """,
+    # Add info about passing along to unittest.
     FLAGS_MODE_TESTS: """\
 run project tests.  Tests include unit tests and doctests.  If %s
 arguments are provided, then only tests whose names begin with one of the
@@ -140,8 +141,8 @@ def _create_parser(suppress_help_exit=False):
     # TODO: incorporate the METAVAR names into the help messages, as appropriate.
     # TODO: fix the help message.
     add_arg('args', metavar=METAVAR_ARG_VALUE, nargs='*')
-    # Defaults to the empty list if provided with no names, or else None.
-    add_arg(FLAGS_MODE_TESTS, dest='run_tests', action='store_true')
+    # None if not provided, otherwise a list.
+    add_arg(FLAGS_MODE_TESTS, dest='run_tests', nargs=argparse.REMAINDER)
     # This argument is the path to a source checkout or source distribution.
     # This lets one specify project resources not available in a package
     # build or install, when doing development testing.  Defaults to no

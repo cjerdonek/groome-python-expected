@@ -31,11 +31,17 @@ def run_tests(argv):
     config = TestConfig(temp_dir="TODO")
     loader = loading.TestLoader()
     loader.test_config = config
-    # TODO: use unittest test discovery.
-    TestPizza(module="pizza.test.pizza.test_pizza", argv=["prog"],
-              testLoader=loader)
+    TestPizza(argv=argv, testLoader=loader)
 
 
 class TestPizza(unittest.TestProgram):
+
+    # We need to override this method because of CPython issue #17052:
+    # http://bugs.python.org/issue17052
+    def _do_discovery(self, argv, Loader=None):
+        if Loader is None:
+            Loader = lambda: self.testLoader
+        super(TestPizza, self)._do_discovery(argv, Loader=Loader)
+
     def parseArgs(self, argv):
         super(TestPizza, self).parseArgs(argv)
