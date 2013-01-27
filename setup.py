@@ -59,18 +59,21 @@ if USE_DISTRIBUTE:
     import setuptools
     import setuptools.command.register as register_mod
     import setuptools.command.sdist as sdist_mod
-    setup = setuptools.setup
-    dist = setuptools
     import pkg_resources  # included with Distribute.
-    # This is different from setuptools.__version__, which is always '0.6'.
     try:
+        # This is different from setuptools.__version__, which is always '0.6'
+        # in the case of Distribute.
         dist_version = pkg_resources.get_distribution("distribute").version
     except pkg_resources.DistributionNotFound:
+        # This is needed to support setuptools if Distribute is not available.
         dist_version = pkg_resources.get_distribution("setuptools").version
+    setup = setuptools.setup
+    dist = setuptools
 else:
     import distutils.command.register as register_mod
     import distutils.command.sdist as sdist_mod
-    from distutils.core import setup
+    import distutils.core
+    setup = distutils.core.setup
     dist = distutils
 
 PACKAGE_NAME = 'pizza'
