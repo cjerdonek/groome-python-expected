@@ -57,16 +57,19 @@ if USE_DISTRIBUTE:
     # in the .pypirc).  See Distribute issue #346 :
     # https://bitbucket.org/tarek/distribute/issue/346/upload-fails-without-server-login-but
     import setuptools
-    from setuptools.command.register import register as _register
-    from setuptools.command.sdist import sdist as _sdist
+    import setuptools.command.register as register_mod
+    import setuptools.command.sdist as sdist_mod
     setup = setuptools.setup
     dist = setuptools
     import pkg_resources  # included with Distribute.
     # This is different from setuptools.__version__, which is always '0.6'.
-    dist_version = pkg_resources.get_distribution("distribute").version
+    try:
+        dist_version = pkg_resources.get_distribution("distribute").version
+    except pkg_resources.DistributionNotFound:
+        dist_version = pkg_resources.get_distribution("setuptools").version
 else:
-    from distutils.command.register import register as _register
-    from distutils.command.sdist import sdist as _sdist
+    import distutils.command.register as register_mod
+    import distutils.command.sdist as sdist_mod
     from distutils.core import setup
     dist = distutils
 
@@ -208,18 +211,18 @@ class upload(_upload, CommandMixin):
         self.confirm_repository()
         return _upload.run(self)
 
-class register(_register, CommandMixin):
+class register(register_mod.register, CommandMixin):
     # We override post_to_server() instead of run() because finalize_options()
     # and self._set_config() are called at the beginning of run().
     def post_to_server(self, data, auth=None):
         check_long_description()
         self.confirm_repository()
-        return _register.post_to_server(self, data, auth=auth)
+        return register_mod.register.post_to_server(self, data, auth=auth)
 
 # This command differs from the original by displaying a report showing
 # differences between the project repository and the source distribution.
 # This is useful in double-checking MANIFEST.in.
-class sdist(_sdist):
+class sdist(sdist_mod.sdist):
     def run(self):
         # Check for the presence of a project "egg-info" directory since
         # this can mask what the current MANIFEST.in yields.
@@ -230,7 +233,7 @@ class sdist(_sdist):
         # Tell make_distribution() not to delete the release tree from
         # which it will create the zipped sdist.
         self.keep_temp = True
-        _sdist.run(self)
+        sdist_mod.sdist.run(self)
         base_dir = self.distribution.get_fullname()
         reporter = Reporter(project_dir=os.curdir, sdist_dir=base_dir)
         try:
