@@ -46,11 +46,13 @@ import sys
 import pizza_setup.utils as utils
 
 # TODO: explore whether I can support distutils (at least for installers).
+#
+# Whether to use Distribute (or setuptools if not available) over distutils.
 # This boolean is temporary for more convenient testing/experimentation.
-USE_DISTRIBUTE = True
+USE_SETUPTOOLS = True
 dist_version = None
 
-if USE_DISTRIBUTE:
+if USE_SETUPTOOLS:
     # Distribute does not seem to support the -r/--repository option
     # with the register command (at least without a [server-login] section
     # in the .pypirc).  See Distribute issue #346 :
