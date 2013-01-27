@@ -36,8 +36,7 @@ from distutils.cmd import Command
 #   https://bitbucket.org/tarek/distribute/issue/346
 #   https://bitbucket.org/tarek/distribute/issue/348
 #
-from distutils.command.upload import upload as _upload
-import distutils.debug as distutils_debug
+import distutils.command.upload as upload_mod
 import filecmp
 import fnmatch
 import logging
@@ -208,11 +207,11 @@ class CommandMixin(object):
         if answer != "yes":
             error("aborted command: %s" % command_name)
 
-class upload(_upload, CommandMixin):
+class upload(upload_mod.upload, CommandMixin):
     def run(self):
         check_long_description()
         self.confirm_repository()
-        return _upload.run(self)
+        return upload_mod.upload.run(self)
 
 class register(register_mod.register, CommandMixin):
     # We override post_to_server() instead of run() because finalize_options()
