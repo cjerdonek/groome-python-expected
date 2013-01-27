@@ -316,7 +316,9 @@ def main(sys_argv):
     # Also, we currently include the test subpackages.  For information on
     # excluding test packages, see:
     # http://packages.python.org/distribute/setuptools.html#using-find-packages
-    packages = setuptools.find_packages()
+    # TODO: add a tox test to check that pizza_setup is not installed.
+    packages = setuptools.find_packages(exclude=['pizza_setup',
+                                                 'pizza_setup.*'])
 
     if extra_args:
         _log.info('including extra kwargs: %r' % extra_args)

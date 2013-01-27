@@ -107,12 +107,23 @@ def configure_logging(sys_argv, sys_stderr=None):
 
     return is_verbose, sys_stderr
 
-def main_inner(sys_argv=None):
+def main_inner(sys_argv=None, from_source=False):
     """Run the program and return the status code."""
     if sys_argv is None:
         sys_argv = sys.argv
+    sys_argv = list(sys_argv)  # since we'll be modifying this.
 
     verbose, stderr_stream = configure_logging(sys_argv)
+
+    pizza_dir = os.path.dirname(pizza.__file__)
+
+    if from_source:
+        # TODO: expose this path calculation in a more central module.
+        sdist_dir = os.path.join(pizza_dir, os.pardir)
+        sys_argv[1:1] = ['--sdist-dir', sdist_dir]
+        start_dir = sdist_dir
+    else:
+        start_dir = pizza_dir
 
     # TODO: add the try-except from Molt.
 
@@ -122,7 +133,6 @@ def main_inner(sys_argv=None):
     log.debug("cwd: %r" % os.getcwd())
 
     if ns.run_tests is not None:  # Then it is a list.
-        start_dir = os.path.dirname(pizza.__file__)
         test_argv = ([sys_argv[0], 'discover', '--start-directory',
                       start_dir] + ns.run_tests)
         harness.run_tests(test_argv)
@@ -146,5 +156,5 @@ def main(sys_argv=None, from_source=False, **kwargs):
         `python -m molt.scripts.molt`).
 
     """
-    status = main_inner(sys_argv)
+    status = main_inner(sys_argv, from_source=from_source)
     sys.exit(status)

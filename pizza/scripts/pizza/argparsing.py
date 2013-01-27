@@ -20,7 +20,7 @@ FLAGS_CHECK_EXPECTED = Option(('--check-output', ))
 FLAGS_HELP = Option(('-h', '--help'))
 FLAGS_LICENSE = Option(('--license', ))
 FLAGS_MODE_TESTS = Option(('--run-tests', '-T', ))
-FLAGS_SOURCE_DIR = Option(('--dev-source-dir', ))
+FLAGS_SDIST_DIR = Option(('--sdist-dir', ))
 FLAGS_VERBOSE = Option(('-v', '--verbose'))
 
 # TODO: populate with sample.json description and URL.
@@ -69,6 +69,10 @@ run project tests.  Tests include unit tests and doctests.  If %s
 arguments are provided, then only tests whose names begin with one of the
 strings are run.  Test names begin with the fully qualified module name.
 """ % METAVAR_ARG_VALUE,
+    FLAGS_SDIST_DIR: """\
+the path to the source distribution directory (aka sdist) if running
+from a source checkout.  Otherwise, this option should be left out.
+""",
     FLAGS_HELP: """\
 show this help message and exit.
 """,
@@ -147,8 +151,8 @@ def _create_parser(suppress_help_exit=False):
     # This lets one specify project resources not available in a package
     # build or install, when doing development testing.  Defaults to no
     # source directory.
-    add_arg(FLAGS_SOURCE_DIR, metavar='DIRECTORY', dest='source_dir',
-            action='store', default=None, help=argparse.SUPPRESS)
+    add_arg(FLAGS_SDIST_DIR, metavar='DIRECTORY', dest='sdist_dir',
+            action='store', default=None)
     add_arg(FLAGS_LICENSE, dest='license_mode', action='store_true',
             help='print license info to stdout.')
     add_arg(('-V', '--version'), dest='version_mode', action='store_true',
