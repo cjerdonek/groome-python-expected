@@ -7,6 +7,17 @@ For instructions on installing or using the application or for instructions
 on contributing, consult the README or
 [project page](https://github.com/cjerdonek/groome-python-expected) instead.
 
+Table of contents:
+
+1.  Background
+2.  One-time setup
+
+    2.1. Set up PyPI user accounts
+
+    2.2. Create `.pypirc` file
+
+3. Release a new version
+
 
 1. Background
 -------------
@@ -40,9 +51,6 @@ to better suit the project's needs.
 -----------------
 
 This section describes setup steps that you need to do only once.  Roughly,
-
-1. Create PyPI user accounts
-2. Create `.pypirc` file
 
 
 ### 2.1. Set up PyPI user accounts
@@ -233,26 +241,29 @@ To test registering the version, you can use the test PyPI server:
 where the string "test" corresponds to the "[test]" section of the
 `.pypirc` file described above.
 
-As a convenience, Pizza's `setup.py` has code to prompt you for confirmation
-prior to registering or uploading:
+As a convenience, Pizza's `setup.py` has added code that prompts you for
+confirmation prior to registering or uploading:
 
     Are you sure you want to register to http://pypi.python.org/pypi (yes/no)?
     pizza: setup.py: [ERROR] aborted command: register
 
-This helps to double-check what server
-you are interacting with and prevent unintentional writes to PyPI:
+This lets you double-check what server you are interacting with and helps
+to prevent unintentional writes to PyPI.
 
-Each time you create a new version, you should register that version.  If you
-make a mistake or find that the metadata is not correct after registering,
-it is okay to correct the source code and register again.  Subsequent
-registrations of a version will overwrite the metadata previously stored
-for that version.
+Each time you create a new version for release, you should register that
+version.  If you make a mistake or find that the metadata is not correct
+after registering, it is okay to correct the source code and register again.
+Subsequent registrations will overwrite the metadata previously stored for
+that version.
+
 
 #### Registration troubleshooting
 
 If the long description shows up on PyPI as plain-text rather than HTML,
 then the conversion to HTML failed.  See the `long_description` section
-above for advice on troubleshooting conversion to HTML.
+above for advice on troubleshooting conversion to HTML.  Also see
+the bug report for PyPI
+[bug #3539253](https://sourceforge.net/tracker/?func=detail&aid=3539253&group_id=66150&atid=513503).
 
 If you get an error like the following after registering:
 
