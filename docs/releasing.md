@@ -3,7 +3,7 @@ Releasing Pizza
 
 This document contains detailed step-by-step instructions for Pizza maintainers
 on how to release both the first version and new versions of Pizza.
-For instructions on installing or using the application or for instructions
+For instructions on installing or using the application, or for instructions
 on contributing, consult the README or
 [project page](https://github.com/cjerdonek/groome-python-expected) instead.
 
@@ -11,12 +11,20 @@ Table of contents:
 
 1.  Background
 2.  One-time setup
-
-    2.1. Set up PyPI user accounts
-
-    2.2. Create `.pypirc` file
-
-3. Release a new version
+    * 2.1. Set up PyPI user accounts
+    * 2.2. Create `.pypirc` file
+3.  Releasing a new version
+    * 3.1. Finalize source
+      * 3.1.1. Review issues
+      * 3.1.2. Update HISTORY file
+      * 3.1.3. Double-check `MANIFEST.in` file
+      * 3.1.4. Bump version number
+      * 3.1.5. Update `long_description` file
+      * 3.1.6. Make sure tests pass
+    * 3.2. Merge to release branch, if necessary
+    * 3.3. Register version on PyPI
+    * 3.4. Upload version to PyPI
+    * 3.5. Tag the commit
 
 
 1. Background
@@ -106,14 +114,7 @@ see this Distribute
 ------------------------
 
 This section describes in detail the steps to release a new version of Pizza,
-assuming the above setup steps have been followed.  At a high level, the steps
-are roughly as follows:
-
-1. Finalize source
-2. Merge to release branch, if necessary
-3. Register version on PyPI
-4. Upload version to PyPI
-5. Tag the commit
+assuming the above setup steps have been followed.
 
 
 ### 3.1. Finalize source
@@ -128,12 +129,6 @@ are found needed.
 
 At a high level, the tasks in this section are--
 
-1. Review issues
-2. Update HISTORY file
-3. Double-check `MANIFEST.in` file
-4. Make sure tests pass
-5. Bump version number
-6. Update `long_description` file
 
 #### 3.1.1 Review issues
 
@@ -168,11 +163,7 @@ generating the sdist, this module's sdist command prints a report of how
 the project directory differs from the created sdist directory.
 
 
-#### 3.1.4. Make sure tests pass
-
-TODO
-
-#### 3.1.5. Bump version number
+#### 3.1.4. Bump version number
 
 TODO
 
@@ -180,7 +171,7 @@ For versioning your project, you may want to consider semantic versioning:
 http://semver.org.
 
 
-#### 3.1.6 Update `long_description` file
+#### 3.1.5. Update `long_description` file
 
 The long_description argument to setup() is stored in a source file.
 Update and commit this file before pushing to PyPI.  To update the file:
@@ -210,6 +201,11 @@ Also see:
 You can also view the long description file on GitHub as a sanity check.
 
 
+#### 3.1.6. Make sure tests pass
+
+TODO
+
+
 ### 3.2. Merge to release branch
 
 TODO:
@@ -221,16 +217,15 @@ TODO:
 
 ### 3.3 Register version on PyPI
 
-When the repository is ready,
+After the repository is ready,
 [register](http://docs.python.org/distutils/packageindex.html) the version
 on PyPI.
 
 Registering on PyPI adds an entry to PyPI for the version without uploading
 any code.  Registering creates a page and URL for the version
 (e.g. [http://pypi.python.org/pypi/Pizza/0.1.0](http://pypi.python.org/pypi/Pizza/0.1.0)),
-stores metadata about the version on the page, and adds the current
-"long_description" to the version's page after converting it to HTML.
-To register:
+stores metadata about the version, and adds the current "long_description"
+to the version's page after converting it to HTML.  To register:
 
     $ python setup.py register
 
@@ -238,17 +233,15 @@ To test registering the version, you can use the test PyPI server:
 
     $ python setup.py register -r test
 
-where the string "test" corresponds to the "[test]" section of the
-`.pypirc` file described above.
-
-As a convenience, Pizza's `setup.py` has added code that prompts you for
-confirmation prior to registering or uploading:
+where the string "test" corresponds to the "[test]" section of the `.pypirc`
+file described above.  As a convenience, Pizza's `setup.py` has extra code
+to prompt you for confirmation prior to registering or uploading:
 
     Are you sure you want to register to http://pypi.python.org/pypi (yes/no)?
     pizza: setup.py: [ERROR] aborted command: register
 
-This lets you double-check what server you are interacting with and helps
-to prevent unintentional writes to PyPI.
+This lets you double-check what server you're interacting with and helps
+prevent unintentional writes to PyPI.
 
 Each time you create a new version for release, you should register that
 version.  If you make a mistake or find that the metadata is not correct
