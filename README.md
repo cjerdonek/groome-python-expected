@@ -47,6 +47,9 @@ Try it
 Hack it
 -------
 
+TODO: merge this section with the "For Contributors" section.  We may want
+to move this information to developing.md.
+
 This section describes how to modify and contribute to Pizza.  In particular,
 it shows you the way around and how to interact with Pizza from a source
 checkout.
@@ -68,6 +71,13 @@ To get help and see all options:
 To run project tests (which are already stubbed out):
 
     $ python runpizza.py --run-tests
+
+
+For Contributors
+---------------
+
+For guidance on working with the Pizza code base, consult the `developing.md`
+file in the `docs` folder of a source distribution.
 
 
 For Maintainers
