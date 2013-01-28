@@ -8,8 +8,8 @@ on contributing, consult the README or
 [project page](https://github.com/cjerdonek/groome-python-expected) instead.
 
 
-Background
-----------
+1. Background
+-------------
 
 This document explains how to distribute Pizza via the Python Package Index,
 or [PyPI](http://pypi.python.org/pypi) (pronounced Pie-pee-EYE).  Correctly
@@ -22,7 +22,7 @@ on the Python web site for more information on PyPI.
 
 The release process documented here assumes that you have already installed
 [Distribute](http://pypi.python.org/pypi/distribute).  We recommend version
-0.6.34 or higher since these instructions were written using that version.
+0.6.34 or higher since these instructions were tested with that version.
 
 Distribute is an extension of the Python standard library's
 [distutils](http://docs.python.org/distutils/index.html) module with
@@ -31,13 +31,13 @@ since Distribute is a replacement of an older module called `setuptools`.
 For basic background information on `setup.py` and related concepts,
 consult the `distutils` and Distribute documentation linked to above.
 
-Also look at the project's `setup.py` file to see how things work.  You should
-feel free to modify and improve `setup.py` and its supporting code to better
-fit your needs.
+Also look at the project's `setup.py` file to see how things work.  As time
+goes on, you should feel free to modify `setup.py` and its supporting code
+to better suit the project's needs.
 
 
-Setup
------
+2. One-time setup
+-----------------
 
 This section describes setup steps that you need to do only once.  Roughly,
 
@@ -45,29 +45,29 @@ This section describes setup steps that you need to do only once.  Roughly,
 2. Create `.pypirc` file
 
 
-### 1. Set up PyPI user accounts
+### 2.1. Set up PyPI user accounts
 
-Create a user account and user account on PyPI if you do not already
-have them.
+Create a user account on PyPI if you do not already have one, as well as
+a test user account.
 
-The We also recommend creating a user account on the
-[test PyPI server](http://testpypi.python.org/pypi) on which you can
-try things out.  The `-r/--repository` option to `setup.py` lets you
-specify this server.
+If Pizza already exists on PyPI, you will also need write permissions on that
+project (i.e. to have the "Maintainer" or "Owner" role for the project).
+A current project owner can grant you those permissions.
+
+We also recommend creating a user account on the
+[test PyPI server](http://testpypi.python.org/pypi).  The test server lets
+you try things out, though the server is not always up.  The `-r/--repository`
+option to `setup.py` (which we describe below) lets you designate this server.
 
 
-If you will be updating an existing package on PyPI, you also need write
-permissions
-on that project (i.e. to have the "Maintainer" or "Owner" role for the
-project).  A current project owner can grant you those permissions.
-
-### 2. Create `.pypirc` file
+### 2.2. Create `.pypirc` file
 
 The [`.pypirc` file](http://docs.python.org/dev/distutils/packageindex.html#the-pypirc-file)
-is a plain-text file that stores your PyPI credentials.  The `setup.py`
-script uses it when you interact with PyPI via the command-line.  We recommend
-starting out with a `.pypirc` file like the following, which also enables
-access to the test server.  It should be placed in your home directory:
+is a plain-text configuration file that stores your PyPI credentials.  The
+`setup.py` script uses it when you interact with PyPI via the command-line.
+We recommend starting out with a `.pypirc` file like the following, which
+also enables access to the test server.  The file should be placed in your
+home directory:
 
     [server-login]
     username: <username>
@@ -88,13 +88,14 @@ access to the test server.  It should be placed in your home directory:
     username: <username>
     password: <password>
 
-The `[server-login]` section is needed only for increased compatibility
-with Distribute.  Without it, Distribute doesn't always work. For example,
-see this Distribute [bug report](https://bitbucket.org/tarek/distribute/issue/346/upload-fails-without-server-login-but).
+The `[server-login]` section is needed for increased compatibility
+with Distribute.  Without it, Distribute doesn't always work.  For example,
+see this Distribute
+[bug report](https://bitbucket.org/tarek/distribute/issue/346/upload-fails-without-server-login-but).
 
 
-Release a new version
----------------------
+3. Release a new version
+------------------------
 
 This section describes in detail the steps to release a new version of Pizza,
 assuming the above setup steps have been followed.  At a high level, the steps
@@ -102,12 +103,12 @@ are roughly as follows:
 
 1. Finalize source
 2. Merge to release branch, if necessary
-3. Register release on PyPI
-4. Upload release to PyPI
+3. Register version on PyPI
+4. Upload version to PyPI
 5. Tag the commit
 
 
-### 1. Finalize source
+### 3.1. Finalize source
 
 This section describes steps to prepare the source code for release.  Most
 of these steps involve committing changes to files.
@@ -126,15 +127,15 @@ At a high level, the tasks in this section are--
 5. Bump version number
 6. Update `long_description` file
 
-#### 1.1 Review issues
+#### 3.1.1 Review issues
 
 TODO
 
-#### 1.2 Update HISTORY file
+#### 3.1.2 Update HISTORY file
 
 TODO
 
-#### 1.3 Double-check `MANIFEST.in` file
+#### 3.1.3 Double-check `MANIFEST.in` file
 
 TODO
 
@@ -159,11 +160,11 @@ generating the sdist, this module's sdist command prints a report of how
 the project directory differs from the created sdist directory.
 
 
-#### 1.4. Make sure tests pass
+#### 3.1.4. Make sure tests pass
 
 TODO
 
-#### 1.5. Bump version number
+#### 3.1.5. Bump version number
 
 TODO
 
@@ -171,7 +172,7 @@ For versioning your project, you may want to consider semantic versioning:
 http://semver.org.
 
 
-#### 1.6 Update `long_description` file
+#### 3.1.6 Update `long_description` file
 
 The long_description argument to setup() is stored in a source file.
 Update and commit this file before pushing to PyPI.  To update the file:
@@ -201,7 +202,7 @@ Also see:
 You can also view the long description file on GitHub as a sanity check.
 
 
-### 2. Merge to release branch
+### 3.2. Merge to release branch
 
 TODO:
 
@@ -210,14 +211,58 @@ TODO:
 * May want to wait a bit before next step
 
 
-### 3. Register release on PyPI
+### 3.3 Register version on PyPI
 
-TODO:
+When the repository is ready,
+[register](http://docs.python.org/distutils/packageindex.html) the version
+on PyPI.
 
-* Okay to redo this step
+Registering on PyPI adds an entry to PyPI for the version without uploading
+any code.  Registering creates a page and URL for the version
+(e.g. [http://pypi.python.org/pypi/Pizza/0.1.0](http://pypi.python.org/pypi/Pizza/0.1.0)),
+stores metadata about the version on the page, and adds the current
+"long_description" to the version's page after converting it to HTML.
+To register:
+
+    $ python setup.py register
+
+To test registering the version, you can use the test PyPI server:
+
+    $ python setup.py register -r test
+
+where the string "test" corresponds to the "[test]" section of the
+`.pypirc` file described above.
+
+As a convenience, Pizza's `setup.py` has code to prompt you for confirmation
+prior to registering or uploading:
+
+    Are you sure you want to register to http://pypi.python.org/pypi (yes/no)?
+    pizza: setup.py: [ERROR] aborted command: register
+
+This helps to double-check what server
+you are interacting with and prevent unintentional writes to PyPI:
+
+Each time you create a new version, you should register that version.  If you
+make a mistake or find that the metadata is not correct after registering,
+it is okay to correct the source code and register again.  Subsequent
+registrations of a version will overwrite the metadata previously stored
+for that version.
+
+#### Registration troubleshooting
+
+If the long description shows up on PyPI as plain-text rather than HTML,
+then the conversion to HTML failed.  See the `long_description` section
+above for advice on troubleshooting conversion to HTML.
+
+If you get an error like the following after registering:
+
+    Upload failed (401): You must be identified to edit package information
+
+then there may be a problem with your `.pypirc` file.  Review the `.pypirc`
+section above for possible issues.
 
 
-### 4. Upload release to PyPI
+### 4. Upload version to PyPI
 
 TODO:
 
