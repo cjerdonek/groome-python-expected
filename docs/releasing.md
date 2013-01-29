@@ -58,7 +58,7 @@ to better suit the project's needs.
 2. One-time setup
 -----------------
 
-This section describes setup steps that you need to do only once.  Roughly,
+This section describes setup steps that you need to do only once.
 
 
 ### 2.1. Set up PyPI user accounts
@@ -110,8 +110,8 @@ see this Distribute
 [bug report](https://bitbucket.org/tarek/distribute/issue/346/upload-fails-without-server-login-but).
 
 
-3. Release a new version
-------------------------
+3. Releasing a new version
+--------------------------
 
 This section describes in detail the steps to release a new version of Pizza,
 assuming the above setup steps have been followed.
@@ -127,16 +127,16 @@ this time (e.g. in a `development` branch).  One exception is if the code
 has already been merged to the release branch but additional finalizations
 are found needed.
 
-At a high level, the tasks in this section are--
-
 
 #### 3.1.1 Review issues
 
 TODO
 
+
 #### 3.1.2 Update HISTORY file
 
 TODO
+
 
 #### 3.1.3 Double-check the `sdist`
 
@@ -267,7 +267,7 @@ then there may be a problem with your `.pypirc` file.  Review the `.pypirc`
 section above for possible issues.
 
 
-### 4. Upload version to PyPI
+### 3.4. Upload version to PyPI
 
 After registering the version on PyPI,
 [upload](http://docs.python.org/distutils/packageindex.html) the package
@@ -288,8 +288,9 @@ after uploading.  You need to go through the process of creating a new
 version, which means repeating the steps above as necessary.
 
 
-### 5. Tag the commit
+### 3.5. Tag the commit
 
+After
 Here is a cheat-sheet for creating tags with Git.  List current tags:
 
     $ git tag -l -n3
