@@ -17,7 +17,7 @@ Table of contents:
     * 3.1. Finalize source
       * 3.1.1. Review issues
       * 3.1.2. Update HISTORY file
-      * 3.1.3. Double-check `MANIFEST.in` file
+      * 3.1.3. Double-check the `sdist`
       * 3.1.4. Bump version number
       * 3.1.5. Update `long_description` file
       * 3.1.6. Make sure tests pass
@@ -138,7 +138,7 @@ TODO
 
 TODO
 
-#### 3.1.3 Double-check `MANIFEST.in` file
+#### 3.1.3 Double-check the `sdist`
 
 TODO
 
@@ -229,7 +229,8 @@ to the version's page after converting it to HTML.  To register:
 
     $ python setup.py register
 
-To test registering the version, you can use the test PyPI server:
+To test registering a version, you can use the `--repository/-r` option
+to target the test PyPI server:
 
     $ python setup.py register -r test
 
@@ -268,10 +269,23 @@ section above for possible issues.
 
 ### 4. Upload version to PyPI
 
-TODO:
+After registering the version on PyPI,
+[upload](http://docs.python.org/distutils/packageindex.html) the package
+to PyPI:
 
-* Delete untracked files to avoid including extra files
-* Repeat all of steps above for new version if mistake was made.
+    $ python setup.py sdist upload
+
+This generates a `*.tar.gz` file by running `python setup.py sdist` and
+then uploads the resulting file to the corresponding version on PyPI.
+See prior sections of this document for more information on sdists.
+
+You can use the `--repository/-r` option with the upload command just like
+you can with register.  The project's upload command also prompts for
+confirmation with the PyPI server name just like with register.
+
+Unlike with the register command, PyPI does not let you "correct" an upload
+after uploading.  You need to go through the process of creating a new
+version, which means repeating the steps above as necessary.
 
 
 ### 5. Tag the commit
