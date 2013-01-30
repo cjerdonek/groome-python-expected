@@ -7,7 +7,9 @@ For instructions on installing or using the application, or for instructions
 on contributing, consult the README or
 [project page](https://github.com/cjerdonek/groome-python-expected) instead.
 
-Table of contents:
+
+Contents
+--------
 
 1.  Background
 2.  One-time setup
@@ -290,15 +292,20 @@ version, which means repeating the steps above as necessary.
 
 ### 3.5. Tag the commit
 
-After
-Here is a cheat-sheet for creating tags with Git.  List current tags:
+After registering and uploading the new version, it is good practice to
+tag the corresponding commit in your repository to indicate where in the
+repository the version came from.
+
+Some helpful commands to do this follow.  To list current tags:
 
     $ git tag -l -n3
 
-Create an annotated tag:
+(The three says to display three lines of each tag's annotation, when an
+annotation exists.)  To create an annotated tag (i.e. a tag with a
+description):
 
-    $ git tag -a -m "version description" "0.1.0"
+    $ git tag -m "version annotation" "0.1.0"
 
-Push a tag to GitHub:
+To push a tag to GitHub:
 
     $ git push --tags <repository> 0.1.0
