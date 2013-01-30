@@ -292,11 +292,12 @@ version, which means repeating the steps above as necessary.
 
 ### 3.5. Tag the commit
 
-After registering and uploading the new version, it is good practice to
-tag the corresponding commit in your repository to indicate where in the
-repository the version came from.
+After registering and uploading a new version, it is good practice to
+tag the corresponding commit in the repository.  This records for the future
+where in the repository the version came from.  Some helpful commands to do
+this follow.
 
-Some helpful commands to do this follow.  To list current tags:
+To list current tags:
 
     $ git tag -l -n3
 
@@ -306,6 +307,6 @@ description):
 
     $ git tag -m "version annotation" "0.1.0"
 
-To push a tag to GitHub:
+To push a tag to a remote repository:
 
     $ git push --tags <repository> 0.1.0
