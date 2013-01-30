@@ -3,6 +3,6 @@ TODO: add a docstring.
 
 """
 
-from pizza.scripts.pizza import main
+import pizza.scripts.pizza.main as main_mod
 
-main.main(from_source=True)
+main_mod.main(from_source=True)

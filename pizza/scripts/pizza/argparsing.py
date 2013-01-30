@@ -9,19 +9,17 @@ import argparse
 import sys
 
 import pizza
-from pizza.scripts.pizza.general.optionparser import (
-    Option, ArgParser, UsageError)
-
+import pizza.general.optionparser as _parsing
 
 METAVAR_ARG_VALUE = 'VALUE'
 METAVAR_INPUT_DIR = 'DIRECTORY'
 
-FLAGS_CHECK_EXPECTED = Option(('--check-output', ))
-FLAGS_HELP = Option(('-h', '--help'))
-FLAGS_LICENSE = Option(('--license', ))
-FLAGS_MODE_TESTS = Option(('--run-tests', '-T', ))
-FLAGS_SDIST_DIR = Option(('--sdist-dir', ))
-FLAGS_VERBOSE = Option(('-v', '--verbose'))
+# TODO: rename to OPTION_*...
+OPTION_HELP = _parsing.Option(('-h', '--help'))
+FLAGS_LICENSE = _parsing.Option(('--license',))
+FLAGS_MODE_TESTS = _parsing.Option(('-T', '--run-tests',))
+FLAGS_SDIST_DIR = _parsing.Option(('--sdist-dir',))
+OPTION_VERBOSE = _parsing.Option(('-v', '--verbose'))
 
 # TODO: populate with sample.json description and URL.
 DESCRIPTION = """\
@@ -73,7 +71,7 @@ strings are run.  Test names begin with the fully qualified module name.
 the path to the source distribution directory (aka sdist) if running
 from a source checkout.  Otherwise, this option should be left out.
 """,
-    FLAGS_HELP: """\
+    OPTION_HELP: """\
 show this help message and exit.
 """,
 }
@@ -106,7 +104,7 @@ def preparse_args(sys_argv):
     try:
         # Suppress the help option to prevent exiting.
         ns = parse_args(sys_argv, suppress_help_exit=True)
-    except UsageError:
+    except _parsing.UsageError:
         # Any usage error will occur again during the real parse.
         return None
     return ns
@@ -128,39 +126,47 @@ def _create_parser(suppress_help_exit=False):
     Return an ArgParser for the program.
 
     """
-    parser = ArgParser(description=DESCRIPTION,
+    parser = _parsing.ArgParser(description=DESCRIPTION,
                        epilog=EPILOG,
                        add_help=False,
                        # Preserves formatting of the description and epilog.
                        formatter_class=argparse.RawDescriptionHelpFormatter)
 
-    def add_arg(option, help=None, **kwargs):
-        """option: an option string or tuple of one or more option strings."""
+    def add_arg(obj, option, help=None, **kwargs):
+        """
+        Arguments:
+          obj: a parser or group.
+          option: an option string or tuple of one or more option strings.
+
+        """
         if help is None:
             help = HELP_STRINGS[option]
         if isinstance(option, basestring):
             option = (option, )
-        parser.add_argument(*option, help=help, **kwargs)
+        obj.add_argument(*option, help=help, **kwargs)
 
     # TODO: incorporate the METAVAR names into the help messages, as appropriate.
     # TODO: fix the help message.
-    add_arg('args', metavar=METAVAR_ARG_VALUE, nargs='*')
-    # None if not provided, otherwise a list.
-    add_arg(FLAGS_MODE_TESTS, dest='run_tests', nargs=argparse.REMAINDER)
+    add_arg(parser, 'args', metavar=METAVAR_ARG_VALUE, nargs='*')
     # This argument is the path to a source checkout or source distribution.
     # This lets one specify project resources not available in a package
     # build or install, when doing development testing.  Defaults to no
     # source directory.
-    add_arg(FLAGS_SDIST_DIR, metavar='DIRECTORY', dest='sdist_dir',
+    add_arg(parser, FLAGS_SDIST_DIR, metavar='DIRECTORY', dest='sdist_dir',
             action='store', default=None)
-    add_arg(FLAGS_LICENSE, dest='license_mode', action='store_true',
-            help='print license info to stdout.')
-    add_arg(('-V', '--version'), dest='version_mode', action='store_true',
-            help='print version info to stdout.')
-    add_arg(FLAGS_VERBOSE, dest='verbose', action='store_true',
+    add_arg(parser, OPTION_VERBOSE, dest='verbose', action='store_true',
             help='log verbosely.')
+    group = parser.add_mutually_exclusive_group()
+    group.title = "modes"
+    # run_tests is None if not provided, otherwise a list.
+    add_arg(group, FLAGS_MODE_TESTS, dest='run_tests',
+            nargs=argparse.REMAINDER)
+    add_arg(group, FLAGS_LICENSE, dest='license_mode', action='store_true',
+            help='print license info to stdout.')
+    add_arg(group, ('-V', '--version'), dest='version_mode',
+            action='store_true', help='print version info to stdout.')
     # We add help manually for more control.
     help_action = "store_true" if suppress_help_exit else "help"
-    add_arg(FLAGS_HELP, action=help_action)
+    add_arg(group, OPTION_HELP, action=help_action)
 
     return parser

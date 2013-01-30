@@ -6,20 +6,33 @@ Provides the function for the main setup.py console_script.
 import logging
 import os
 import sys
+import traceback
 
 import pizza.pizza as _pizza
+import pizza.general.common as _common
+import pizza.general.logconfig as logconfig
+import pizza.general.optionparser as _parsing
 import pizza.scripts
 import pizza.scripts.pizza.argparsing as argparsing
-import pizza.scripts.pizza.general.logconfig as logconfig
 import pizza.test.harness.main as harness
 
+EXIT_STATUS_SUCCESS = 0
+EXIT_STATUS_FAIL = 1
+EXIT_STATUS_USAGE_ERROR = 2
 
 LOGGING_LEVEL_DEFAULT = logging.INFO
 
 # TODO: should this be made public with a better name?
 log = logging.getLogger("pizza.script")
 # Loggers that should display during testing.
+# TODO: make this test_loggers instead of test_logger_names.
 test_logger_names = [logger.name for logger in (log, harness.log)]
+
+
+def error(msg, verbose=False):
+    if verbose:
+        msg = traceback.format_exc()
+    log.error(msg)
 
 
 # TODO: make this testable.
@@ -81,6 +94,7 @@ def _configure_logging(level=None, stream=None, is_testing=False,
 
     log.debug("debug logging enabled")
 
+
 def configure_logging(sys_argv, sys_stderr=None):
     """
     Configure logging and return whether to run in verbose mode.
@@ -107,13 +121,10 @@ def configure_logging(sys_argv, sys_stderr=None):
 
     return is_verbose, sys_stderr
 
-def main_inner(sys_argv=None, from_source=False):
-    """Run the program and return the status code."""
-    if sys_argv is None:
-        sys_argv = sys.argv
-    sys_argv = list(sys_argv)  # since we'll be modifying this.
 
-    verbose, stderr_stream = configure_logging(sys_argv)
+def _main_inner(sys_argv, from_source):
+    """Run the program and return the status code."""
+    sys_argv = list(sys_argv)  # since we'll be modifying this.
 
     pizza_dir = os.path.dirname(pizza.__file__)
 
@@ -132,7 +143,7 @@ def main_inner(sys_argv=None, from_source=False):
     log.debug("parsed args: %r" % ns)
     log.debug("cwd: %r" % os.getcwd())
 
-    if ns.run_tests is not None:  # Then it is a list.
+    if ns.run_tests is not None:  # Then the value is a list.
         test_argv = ([sys_argv[0], 'discover', '--start-directory',
                       start_dir] + ns.run_tests)
         harness.run_tests(test_argv)
@@ -141,20 +152,50 @@ def main_inner(sys_argv=None, from_source=False):
         result = _pizza.run(values)
         print(result)
 
-    # TODO: return the right status code as appropriate.
-    return 0
+    return EXIT_STATUS_SUCCESS
+
+
+def _main(sys_argv=None, from_source=False):
+    if sys_argv is None:
+        sys_argv = sys.argv
+
+    # TODO: pass the error stream instead of returning it.
+    verbose, stderr_stream = configure_logging(sys_argv)
+    # TODO: also handle KeyboardInterrupt.
+    # TODO: handle general exceptions by always displaying the stack trace.
+    try:
+        status = _main_inner(sys_argv, from_source)
+    except _parsing.UsageError as err:
+        details = """\
+Usage error: %s
+-->argv: %r
+
+Pass %s for help documentation and available options.""" % (
+            err, sys.argv, argparsing.OPTION_HELP.display(' or '))
+        error(details, verbose)
+        status = EXIT_STATUS_USAGE_ERROR
+    except _common.Error, err:
+        msg = """\
+%s
+Pass %s for the stack trace.""" % (err,
+                                   argparsing.OPTION_VERBOSE.display(' or '))
+        error(msg, verbose)
+        status = EXIT_STATUS_FAIL
+
+    return status
+
 
 # TODO: follow all of the recommendations here:
 # http://www.artima.com/weblogs/viewpost.jsp?thread=4829
 # Keep this link for reference even after following the guidance.
-def main(sys_argv=None, from_source=False, **kwargs):
+def main(sys_argv=None, from_source=False):
     """
     Arguments:
 
       from_source: whether this function is being called from a source
-        checkout (e.g. by running `python test_molt.py` or
-        `python -m molt.scripts.molt`).
+        checkout (e.g. by running `python runpizza.py` or
+        `python -m pizza.scripts.pizza`).
 
     """
-    status = main_inner(sys_argv, from_source=from_source)
+    status = _main(sys_argv, from_source=from_source)
     sys.exit(status)
