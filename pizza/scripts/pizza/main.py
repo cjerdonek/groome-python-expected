@@ -29,8 +29,8 @@ log = logging.getLogger("pizza.script")
 test_logger_names = [logger.name for logger in (log, harness.log)]
 
 
-def error(msg, verbose=False):
-    if verbose:
+def error(msg, add_trace=False):
+    if add_trace:
         msg = traceback.format_exc()
     log.error(msg)
 
@@ -162,15 +162,13 @@ def _main(argv=None, from_source=False):
         argv = sys.argv
 
     verbose = configure_logging(argv, stream=sys.stderr)
-    # TODO: also handle KeyboardInterrupt.
-    # TODO: handle general exceptions by always displaying the stack trace.
+    # TODO: also handle KeyboardInterrupt?
     try:
         status = _main_inner(argv, from_source)
     except _parsing.UsageError as err:
         details = """\
 Usage error: %s
 -->argv: %r
-
 Pass %s for help documentation and available options.""" % (
             err, sys.argv, argparsing.OPTION_HELP.display(' or '))
         error(details, verbose)
@@ -180,15 +178,20 @@ Pass %s for help documentation and available options.""" % (
 %s
 Pass %s for the stack trace.""" % (err,
                                    argparsing.OPTION_VERBOSE.display(' or '))
-        error(msg, verbose)
+        error(msg, add_trace=verbose)
+        status = EXIT_STATUS_FAIL
+    except Exception, err:
+        # Always add the stack trace for "unexpected" exceptions.
+        error(err, add_trace=True)
         status = EXIT_STATUS_FAIL
 
     return status
 
 
-# TODO: follow all of the recommendations here:
+# We follow most of the following guidance from Guido van Rossum regarding
+# main() functions (though _main() is our function that returns an exit
+# status rather than main()):
 # http://www.artima.com/weblogs/viewpost.jsp?thread=4829
-# Keep this link for reference even after following the guidance.
 def main(argv=None, from_source=False):
     """
     Arguments:
