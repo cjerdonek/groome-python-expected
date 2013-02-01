@@ -95,19 +95,21 @@ def _configure_logging(level=None, stream=None, is_testing=False,
     log.debug("debug logging enabled")
 
 
-def configure_logging(sys_argv, sys_stderr=None):
+def configure_logging(argv, stream=None):
     """
     Configure logging and return whether to run in verbose mode.
 
     """
-    if sys_stderr is None:
-        sys_stderr = sys.stderr
+    if argv is None:
+        argv = sys.argv
+    if stream is None:
+        stream = sys.stderr
 
     is_testing = False
     is_verbose = False
 
     # Configure logging before parsing arguments for real.
-    ns = argparsing.preparse_args(sys_argv)
+    ns = argparsing.preparse_args(argv)
 
     if ns is not None:
         # Then args parsed without error.
@@ -116,35 +118,35 @@ def configure_logging(sys_argv, sys_stderr=None):
             is_testing = True
 
     # TODO: reconsider the argument names here.
-    _configure_logging(stream=sys_stderr, is_testing=is_testing,
+    _configure_logging(stream=stream, is_testing=is_testing,
                        is_verbose=is_verbose)
 
-    return is_verbose, sys_stderr
+    return is_verbose
 
 
-def _main_inner(sys_argv, from_source):
+def _main_inner(argv, from_source):
     """Run the program and return the status code."""
-    sys_argv = list(sys_argv)  # since we'll be modifying this.
+    argv = list(argv)  # since we'll be modifying this.
 
     pizza_dir = os.path.dirname(pizza.__file__)
 
     if from_source:
         # TODO: expose this path calculation in a more central module.
         sdist_dir = os.path.join(pizza_dir, os.pardir)
-        sys_argv[1:1] = ['--sdist-dir', sdist_dir]
+        argv[1:1] = ['--sdist-dir', sdist_dir]
         start_dir = sdist_dir
     else:
         start_dir = pizza_dir
 
     # TODO: add the try-except from Molt.
 
-    log.debug("argv: %r" % sys_argv)
-    ns = argparsing.parse_args(sys_argv)
+    log.debug("argv: %r" % argv)
+    ns = argparsing.parse_args(argv)
     log.debug("parsed args: %r" % ns)
     log.debug("cwd: %r" % os.getcwd())
 
     if ns.run_tests is not None:  # Then the value is a list.
-        test_argv = ([sys_argv[0], 'discover', '--start-directory',
+        test_argv = ([argv[0], 'discover', '--start-directory',
                       start_dir] + ns.run_tests)
         harness.run_tests(test_argv)
     else:
@@ -155,16 +157,15 @@ def _main_inner(sys_argv, from_source):
     return EXIT_STATUS_SUCCESS
 
 
-def _main(sys_argv=None, from_source=False):
-    if sys_argv is None:
-        sys_argv = sys.argv
+def _main(argv=None, from_source=False):
+    if argv is None:
+        argv = sys.argv
 
-    # TODO: pass the error stream instead of returning it.
-    verbose, stderr_stream = configure_logging(sys_argv)
+    verbose = configure_logging(argv, stream=sys.stderr)
     # TODO: also handle KeyboardInterrupt.
     # TODO: handle general exceptions by always displaying the stack trace.
     try:
-        status = _main_inner(sys_argv, from_source)
+        status = _main_inner(argv, from_source)
     except _parsing.UsageError as err:
         details = """\
 Usage error: %s
@@ -188,7 +189,7 @@ Pass %s for the stack trace.""" % (err,
 # TODO: follow all of the recommendations here:
 # http://www.artima.com/weblogs/viewpost.jsp?thread=4829
 # Keep this link for reference even after following the guidance.
-def main(sys_argv=None, from_source=False):
+def main(argv=None, from_source=False):
     """
     Arguments:
 
@@ -197,5 +198,5 @@ def main(sys_argv=None, from_source=False):
         `python -m pizza.scripts.pizza`).
 
     """
-    status = _main(sys_argv, from_source=from_source)
+    status = _main(argv, from_source=from_source)
     sys.exit(status)

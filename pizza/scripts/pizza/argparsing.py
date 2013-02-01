@@ -156,8 +156,11 @@ def _create_parser(suppress_help_exit=False):
             action='store', default=None)
     add_arg(parser, OPTION_VERBOSE, dest='verbose', action='store_true',
             help='log verbosely.')
+
+    # This group corresponds to the possible "modes" or "commands".
+    # We do not use a subparsers for this because of issue #17050:
+    # http://bugs.python.org/issue17050
     group = parser.add_mutually_exclusive_group()
-    group.title = "modes"
     # run_tests is None if not provided, otherwise a list.
     add_arg(group, FLAGS_MODE_TESTS, dest='run_tests',
             nargs=argparse.REMAINDER)
