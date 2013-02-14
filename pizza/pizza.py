@@ -3,10 +3,14 @@
 # Copyright (C) 2012 Mustachioed Maven.
 
 
-# TODO: rename this function to something less generic.
-def run(values):
+# TODO: replace this placeholder docstring and function body with the
+# real implementation.
+def run_pizza(values):
     """
-    TODO:
+    Execute the pizza package's main command-line functionality.
+
+    Returns a string suitable for printing to stdout that displays the
+    number of values in the given list.
 
     """
-    return "input: %s" % repr(values)
+    return "number of values: %s" % len(values)

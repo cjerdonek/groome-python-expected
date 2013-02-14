@@ -146,15 +146,13 @@ def _main_inner(argv, from_source):
     log.debug("cwd: %r" % os.getcwd())
 
     if ns.run_tests is not None:  # Then the value is a list.
-        test_argv = ([argv[0], 'discover', '--start-directory',
-                      start_dir] + ns.run_tests)
+        test_argv = ([argv[0], 'discover', '--start-directory', start_dir] +
+                     ns.run_tests)
         harness.run_tests(test_argv)
     else:
         values = ns.args
-        result = _pizza.run(values)
+        result = _pizza.run_pizza(values)
         print(result)
-
-    return EXIT_STATUS_SUCCESS
 
 
 def _main(argv=None, from_source=False):
@@ -164,7 +162,8 @@ def _main(argv=None, from_source=False):
     verbose = configure_logging(argv, stream=sys.stderr)
     # TODO: also handle KeyboardInterrupt?
     try:
-        status = _main_inner(argv, from_source)
+        _main_inner(argv, from_source)
+        status = EXIT_STATUS_SUCCESS
     except _parsing.UsageError as err:
         details = """\
 Usage error: %s
@@ -188,8 +187,8 @@ Pass %s for the stack trace.""" % (err,
     return status
 
 
-# We follow most of the following guidance from Guido van Rossum regarding
-# main() functions (though _main() is our function that returns an exit
+# We follow most of Guido van Rossum's 2003 advice regarding main()
+# functions (though we choose _main() as the function that returns an exit
 # status rather than main()):
 # http://www.artima.com/weblogs/viewpost.jsp?thread=4829
 def main(argv=None, from_source=False):

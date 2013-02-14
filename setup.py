@@ -43,6 +43,9 @@ import logging
 import os
 import sys
 
+# For various reasons, we deliberately avoid importing from the pizza package
+# itself and making the pizza setup code dependent on pizza.  However, it
+# is of course okay to import from pizza_setup.
 import pizza_setup.utils as utils
 
 # TODO: explore whether I can support distutils (at least for installers).
@@ -91,7 +94,7 @@ _log = logging.getLogger(os.path.basename(__file__))
 
 def configure_logging():
     """
-    Configure logging with simple settings.
+    Configure setup.py logging with simple settings.
 
     """
     # Prefix the log messages to distinguish them from other text sent to
@@ -270,8 +273,7 @@ class pizza_prep(Command):
 
 
 # The purpose of this function is to follow the guidance suggested here:
-#
-#   http://packages.python.org/distribute/python3.html#note-on-compatibility-with-setuptools
+# http://packages.python.org/distribute/python3.html#note-on-compatibility-with-setuptools
 #
 # The guidance is for better compatibility when using setuptools (e.g. with
 # earlier versions of Python 2) instead of Distribute, because of new
@@ -282,6 +284,8 @@ def get_extra_args():
 
     """
     extra = {}
+    # TODO: document that Distribute is necessary if using Python 3 and
+    # possibly include this in the exception message.
     # Check the Python version instead of whether we're using Distribute or
     # setuptools because the former is less brittle.
     if sys.version_info >= (3, ):
@@ -317,11 +321,11 @@ def main(sys_argv):
 
     long_description = get_long_description()
     extra_args = get_extra_args()
-    # We don't include pizza_setup to prevent it from going into the
-    # build/install.  This does not prevent it from going into the source
-    # distribution, where it should go (which we do via the MANIFEST.in file).
-    # Also, we currently include the test subpackages.  For information on
-    # excluding test packages, see:
+    # We do not include pizza_setup to prevent it from going into the
+    # build/install.  However, this does not prevent it from going into the
+    # source distribution, where it should go (which we do via the
+    # MANIFEST.in file).  Also, we currently include the test subpackages.
+    # For information on excluding test packages, see:
     # http://packages.python.org/distribute/setuptools.html#using-find-packages
     # TODO: add a tox test to check that pizza_setup is not installed.
     packages = setuptools.find_packages(exclude=['pizza_setup',
