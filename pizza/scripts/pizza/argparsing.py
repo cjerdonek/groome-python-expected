@@ -61,12 +61,14 @@ HELP_STRINGS = {
     'args': """\
 zero more input values.
 """,
-    # Add info about passing along to unittest.
     FLAGS_MODE_TESTS: """\
-run project tests.  Tests include unit tests and doctests.  If %s
-arguments are provided, then only tests whose names begin with one of the
-strings are run.  Test names begin with the fully qualified module name.
-""" % METAVAR_ARG_VALUE,
+discover and run project tests.  Tests include unit tests and doctests.
+Running this command is for the most part equivalent to running unittest's
+command-line discover command with an appropriate -t/--start-directory value.
+Option values are passed along as is to the discover command.  For info on
+the discovery options, consult the Python documentation or pass -h or --help
+as an option to this value.
+""",
     FLAGS_SDIST_DIR: """\
 the path to the source distribution directory (aka sdist) if running
 from a source checkout.  Otherwise, this option should be left out.
