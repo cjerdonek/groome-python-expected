@@ -14,14 +14,14 @@ import pizza.general.optionparser as _parsing
 METAVAR_ARG_VALUE = 'VALUE'
 METAVAR_INPUT_DIR = 'DIRECTORY'
 
-# TODO: rename to OPTION_*...
+# TODO [template]: rename to OPTION_*...
 OPTION_HELP = _parsing.Option(('-h', '--help'))
 FLAGS_LICENSE = _parsing.Option(('--license',))
 FLAGS_MODE_TESTS = _parsing.Option(('-T', '--run-tests',))
 FLAGS_SDIST_DIR = _parsing.Option(('--sdist-dir',))
 OPTION_VERBOSE = _parsing.Option(('-v', '--verbose'))
 
-# TODO: populate with sample.json description and URL.
+# TODO [template]: populate with sample.json description and URL.
 DESCRIPTION = """\
 Make a pizza!
 """
@@ -147,8 +147,9 @@ def _create_parser(suppress_help_exit=False):
             option = (option, )
         obj.add_argument(*option, help=help, **kwargs)
 
-    # TODO: incorporate the METAVAR names into the help messages, as appropriate.
-    # TODO: fix the help message.
+    # TODO [template]: incorporate the METAVAR names into the help messages,
+    # as appropriate.
+    # TODO [template]: fix the help message.
     add_arg(parser, 'args', metavar=METAVAR_ARG_VALUE, nargs='*')
     # This argument is the path to a source checkout or source distribution.
     # This lets one specify project resources not available in a package
