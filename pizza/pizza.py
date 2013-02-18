@@ -7,10 +7,9 @@
 # real implementation.
 def run_pizza(values):
     """
-    Execute the pizza package's main command-line functionality.
+    Return the number of values.
 
-    Returns a string suitable for printing to stdout that displays the
-    number of values in the given list.
+    This function executes the Pizza package's main command-line functionality.
 
     """
-    return "number of values: %s" % len(values)
+    return len(values)

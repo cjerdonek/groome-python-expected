@@ -24,15 +24,14 @@ Pizza is the project you get when you render the
 [Groome](http://cjerdonek.github.com/groome) project template
 [groome-python](https://github.com/cjerdonek/groome-python) with its
 sample configuration file.  For testing purposes, this project also serves
-as the "expected" value of that template.
-
-[This project and `groome-python` are still being worked on and are not
-yet usable.]
+as the "expected" value of that template.  See the
+[groome-python](https://github.com/cjerdonek/groome-python) project page
+for features of this project.
 
 A minimal sample usage looks like--
 
-    $ python runpizza.py hello world
-    value count: 2
+    $ python runpizza.py hello crazy world
+    3
 
 The project page and source code is on
 [GitHub](https://github.com/cjerdonek/groome-python-expected), and releases
@@ -41,6 +40,9 @@ can be found on [PyPI](http://pypi.python.org/pypi/Pizza)
 
 Feedback is welcome.  You can file bug reports and feature requests on the
 [project tracker](https://github.com/cjerdonek/groome-python-expected/issues).
+
+[This project and `groome-python` are still being worked on and are not
+yet usable.]
 
 
 Install It
