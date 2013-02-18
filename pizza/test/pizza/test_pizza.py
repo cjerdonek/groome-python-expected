@@ -6,7 +6,7 @@ Tests of pizza.pizza.
 import unittest
 import pizza.test.harness.general.loading as loading
 
-# TODO: use this only where it makes sense.
+# TODO [template]: use this only where it makes sense.
 load_tests = loading.config_load_tests
 
 class MainTestCase(unittest.TestCase):
