@@ -282,14 +282,7 @@ def convert_md_to_rst(source_path, temp_rst_path, docstring_path):
 
     """
     _write_md_to_rst(source_path, temp_rst_path, __file__)
-    rst = read(temp_rst_path, encoding='utf-8')
-    # Make sure images aren't centered.
-    # TODO: remove this hack once pandoc releases this change:
-    # https://github.com/jgm/pandoc/commit/9d0b011869d06be2e540feac99070683e10d33da
-    # See also: https://groups.google.com/d/topic/pandoc-discuss/rxjyzxx9oF0/discussion
-    lines = rst.splitlines(True)
-    lines = [line for line in lines if not ":align: center" in line]
-    return "".join(lines)
+    return read(temp_rst_path, encoding='utf-8')
 
 
 def update_description_file(source_paths, target_path, docstring_path,
