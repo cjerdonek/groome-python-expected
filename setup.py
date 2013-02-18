@@ -12,11 +12,12 @@ https://github.com/cjerdonek/groome-python-expected
 
 """
 
+DISTUTILS_DEBUG = True
 # This is a hack to make it easier to enable distutils's debug mode.  This
-# code must come before importing from distutils.
-# See also: http://docs.python.org/2/distutils/setupscript.html#debugging-the-setup-script
+# code must come before importing from distutils.  See also:
+# http://docs.python.org/2/distutils/setupscript.html#debugging-the-setup-script
 import os
-os.environ['DISTUTILS_DEBUG'] = "1"  # "" for False or "1" for True.
+os.environ['DISTUTILS_DEBUG'] = "1" if DISTUTILS_DEBUG else ""
 
 # We use setuptools/Distribute because distutils does not seem to support
 # the following arguments to setUp().  Passing these arguments to
@@ -48,7 +49,7 @@ import sys
 # is of course okay to import from pizza_setup.
 import pizza_setup.utils as utils
 
-# TODO: explore whether I can support distutils (at least for installers).
+# TODO [template]: explore whether I can support distutils (at least for installers).
 #
 # Whether to use Distribute (or setuptools if not available) over distutils.
 # This boolean is temporary for more convenient testing/experimentation.
@@ -284,7 +285,7 @@ def get_extra_args():
 
     """
     extra = {}
-    # TODO: document that Distribute is necessary if using Python 3 and
+    # TODO [template]: document that Distribute is necessary if using Python 3 and
     # possibly include this in the exception message.
     # Check the Python version instead of whether we're using Distribute or
     # setuptools because the former is less brittle.
@@ -327,7 +328,7 @@ def main(sys_argv):
     # MANIFEST.in file).  Also, we currently include the test subpackages.
     # For information on excluding test packages, see:
     # http://packages.python.org/distribute/setuptools.html#using-find-packages
-    # TODO: add a tox test to check that pizza_setup is not installed.
+    # TODO [template]: add a tox test to check that pizza_setup is not installed.
     packages = setuptools.find_packages(exclude=['pizza_setup',
                                                  'pizza_setup.*'])
 
