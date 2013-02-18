@@ -43,10 +43,27 @@ Feedback is welcome.  You can file bug reports and feature requests on the
 yet usable.]
 
 
+Requirements
+------------
+
+Pizza supports the following Python versions:
+
+* Python 2.7
+* Python 3.2
+* Python 3.3
+* [PyPy](http://pypy.org/)
+
+Pizza has no third-party dependencies.
+
+Installing for Python 3 requires that
+[Distribute](http://packages.python.org/distribute/) be installed and that
+[pip](http://www.pip-installer.org/) use Distribute.
+
+
 Install It
 ----------
 
-    TODO [template]:
+    $ pip install pizza
 
 
 Test it
