@@ -47,12 +47,28 @@ tracker <https://github.com/cjerdonek/groome-python-expected/issues>`__.
 [This project and ``groome-python`` are still being worked on and are
 not yet usable.]
 
+Requirements
+------------
+
+Pizza supports the following Python versions:
+
+-  Python 2.7
+-  Python 3.2
+-  Python 3.3
+-  `PyPy <http://pypy.org/>`__
+
+Pizza has no third-party dependencies.
+
+Installing for Python 3 requires that
+`Distribute <http://packages.python.org/distribute/>`__ be installed and
+that `pip <http://www.pip-installer.org/>`__ use Distribute.
+
 Install It
 ----------
 
 ::
 
-    TODO [template]:
+    $ pip install pizza
 
 Test it
 -------
