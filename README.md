@@ -13,42 +13,57 @@ from GitHub pages because that's what GitHub prefers. -->
 
 <!-- TODO: change the following link to this:
   [![Build Status](https://travis-ci.org/cjerdonek/groome-python-expected.png)](https://travis-ci.org/cjerdonek/groome-python-expected)
-once the resolution for the following pandoc issue is released:
+once the fix for the following pandoc issue is released:
   https://github.com/jgm/pandoc/issues/697 -->
 ![](https://travis-ci.org/cjerdonek/groome-python-expected.png "Build Status")
 
-This is the working skeleton project you get when you render the
+This is a sample demonstration project of a [Python](http://www.python.org)
+command-line script.  This is the project you get when you render the
 [Groome](http://cjerdonek.github.com/groome) template
 [groome-python](https://github.com/cjerdonek/groome-python) with its
-sample configuration file.
+sample configuration file.  For testing purposes, this project also serves
+as the "expected" value of that template.
 
 [This project and `groome-python` are still being worked on and are not
 yet usable.]
+
+A minimal sample usage looks like--
+
+    $ python runpizza.py hello world
+    value count: 2
+
+The project page and source code is on
+[GitHub](https://github.com/cjerdonek/groome-python-expected), and releases
+can be found on [PyPI](http://pypi.python.org/pypi/Pizza)
+(the Python Package Index).
+
+Feedback is welcome.  You can file bug reports and feature requests on the
+[project tracker](https://github.com/cjerdonek/groome-python-expected/issues).
 
 
 Install It
 ----------
 
-    TODO
+    TODO [template]:
 
 
 Test it
 -------
 
-    TODO
+    TODO [template]:
 
 
 Try it
 ------
 
-    TODO
+    TODO [template]:
 
 
 Hack it
 -------
 
-TODO: merge this section with the "For Contributors" section.  We may want
-to move this information to developing.md.
+TODO [template]: merge this section with the "For Contributors" section.  We
+may want to move this information to developing.md.
 
 This section describes how to modify and contribute to Pizza.  In particular,
 it shows you the way around and how to interact with Pizza from a source
