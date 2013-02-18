@@ -14,8 +14,7 @@ Pizza
 .. figure:: http://cjerdonek.github.com/groome/images/python-pizza.jpeg
    :alt: python eating pizza
 
-.. figure:: https://travis-ci.org/cjerdonek/groome-python-expected.png
-   :alt: Build Status
+|Build Status|
 
 `Pizza <https://github.com/cjerdonek/groome-python-expected>`__ is a
 sample demonstration project of a `Python <http://www.python.org>`__
@@ -161,3 +160,5 @@ History
 
 -  Initial release.
 
+.. |Build Status| image:: https://travis-ci.org/cjerdonek/groome-python-expected.png
+   :target: https://travis-ci.org/cjerdonek/groome-python-expected

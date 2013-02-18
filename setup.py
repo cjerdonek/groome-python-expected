@@ -12,7 +12,7 @@ https://github.com/cjerdonek/groome-python-expected
 
 """
 
-DISTUTILS_DEBUG = True
+DISTUTILS_DEBUG = False
 # This is a hack to make it easier to enable distutils's debug mode.  This
 # code must come before importing from distutils.  See also:
 # http://docs.python.org/2/distutils/setupscript.html#debugging-the-setup-script

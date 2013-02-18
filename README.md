@@ -11,11 +11,9 @@ text shows up in the reST version converted by pandoc.  This image is served
 from GitHub pages because that's what GitHub prefers. -->
 ![](http://cjerdonek.github.com/groome/images/python-pizza.jpeg "python eating pizza")
 
-<!-- TODO [template]: change the following link to this:
-  [![Build Status](https://travis-ci.org/cjerdonek/groome-python-expected.png)](https://travis-ci.org/cjerdonek/groome-python-expected)
-once the fix for the following pandoc issue is released:
-  https://github.com/jgm/pandoc/issues/697 -->
-![](https://travis-ci.org/cjerdonek/groome-python-expected.png "Build Status")
+<!-- Travis CI recommends the following for build-status images in Markdown:
+http://about.travis-ci.org/docs/user/status-images/ -->
+[![Build Status](https://travis-ci.org/cjerdonek/groome-python-expected.png)](https://travis-ci.org/cjerdonek/groome-python-expected)
 
 [Pizza](https://github.com/cjerdonek/groome-python-expected) is a sample
 demonstration project of a [Python](http://www.python.org) command-line script.
