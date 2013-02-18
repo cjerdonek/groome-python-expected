@@ -11,15 +11,17 @@ text shows up in the reST version converted by pandoc.  This image is served
 from GitHub pages because that's what GitHub prefers. -->
 ![](http://cjerdonek.github.com/groome/images/python-pizza.jpeg "python eating pizza")
 
-<!-- TODO: change the following link to this:
+<!-- TODO [template]: change the following link to this:
   [![Build Status](https://travis-ci.org/cjerdonek/groome-python-expected.png)](https://travis-ci.org/cjerdonek/groome-python-expected)
 once the fix for the following pandoc issue is released:
   https://github.com/jgm/pandoc/issues/697 -->
 ![](https://travis-ci.org/cjerdonek/groome-python-expected.png "Build Status")
 
-This is a sample demonstration project of a [Python](http://www.python.org)
-command-line script.  This is the project you get when you render the
-[Groome](http://cjerdonek.github.com/groome) template
+[Pizza](https://github.com/cjerdonek/groome-python-expected) is a sample
+demonstration project of a [Python](http://www.python.org) command-line script.
+
+Pizza is the project you get when you render the
+[Groome](http://cjerdonek.github.com/groome) project template
 [groome-python](https://github.com/cjerdonek/groome-python) with its
 sample configuration file.  For testing purposes, this project also serves
 as the "expected" value of that template.
