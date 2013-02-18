@@ -17,10 +17,33 @@ Pizza
 .. figure:: https://travis-ci.org/cjerdonek/groome-python-expected.png
    :alt: Build Status
 
-This is the working skeleton project you get when you render the
-`Groome <http://cjerdonek.github.com/groome>`_ template
-`groome-python <https://github.com/cjerdonek/groome-python>`_ with its
-sample configuration file.
+`Pizza <https://github.com/cjerdonek/groome-python-expected>`__ is a
+sample demonstration project of a `Python <http://www.python.org>`__
+command-line script.
+
+Pizza is the project you get when you render the
+`Groome <http://cjerdonek.github.com/groome>`__ project template
+`groome-python <https://github.com/cjerdonek/groome-python>`__ with its
+sample configuration file. For testing purposes, this project also
+serves as the "expected" value of that template. See the
+`groome-python <https://github.com/cjerdonek/groome-python>`__ project
+page for features of this project.
+
+A minimal sample usage looks like--
+
+::
+
+    $ python runpizza.py hello crazy world
+    3
+
+The project page and source code is on
+`GitHub <https://github.com/cjerdonek/groome-python-expected>`__, and
+releases can be found on `PyPI <http://pypi.python.org/pypi/Pizza>`__
+(the Python Package Index).
+
+Feedback is welcome. You can file bug reports and feature requests on
+the `project
+tracker <https://github.com/cjerdonek/groome-python-expected/issues>`__.
 
 [This project and ``groome-python`` are still being worked on and are
 not yet usable.]
@@ -30,27 +53,27 @@ Install It
 
 ::
 
-    TODO
+    TODO [template]:
 
 Test it
 -------
 
 ::
 
-    TODO
+    TODO [template]:
 
 Try it
 ------
 
 ::
 
-    TODO
+    TODO [template]:
 
 Hack it
 -------
 
-TODO: merge this section with the "For Contributors" section. We may
-want to move this information to developing.md.
+TODO [template]: merge this section with the "For Contributors" section.
+We may want to move this information to developing.md.
 
 This section describes how to modify and contribute to Pizza. In
 particular, it shows you the way around and how to interact with Pizza
@@ -98,7 +121,7 @@ distribution.
 Author
 ------
 
-Pizza is authored by `Chris Jerdonek <https://github.com/cjerdonek>`_.
+Pizza is authored by `Chris Jerdonek <https://github.com/cjerdonek>`__.
 
 Copyright
 ---------
