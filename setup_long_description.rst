@@ -26,7 +26,7 @@ Pizza is the project you get when you render the
 sample configuration file. For testing purposes, this project also
 serves as the "expected" value of that template. See the
 `groome-python <https://github.com/cjerdonek/groome-python>`__ project
-page for features of this project.
+page for more information about this project.
 
 A minimal sample usage looks like--
 
