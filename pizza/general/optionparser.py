@@ -48,7 +48,11 @@ class Option(tuple):
     Encapsulates a command option (e.g. "-h" and "--help", or "--run-tests").
 
     """
-    def display(self, glue):
+    def display(self, glue='/'):
+        """
+        Return a string for inclusion in a help string, e.g. '-h/--help'.
+
+        """
         return glue.join(self)
 
 
