@@ -107,7 +107,7 @@ class Results(object):
 
 class Differencer(object):
 
-    """Comparse project directories to generated sdist directories."""
+    """Compares project directories to generated sdist directories."""
 
     def __init__(self, skip):
         self.skip = skip
