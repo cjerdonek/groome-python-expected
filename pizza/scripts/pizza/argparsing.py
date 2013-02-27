@@ -14,11 +14,11 @@ import pizza.general.optionparser as _parsing
 METAVAR_ARG_VALUE = 'VALUE'
 METAVAR_INPUT_DIR = 'DIRECTORY'
 
-# TODO [template]: rename to OPTION_*...
-OPTION_HELP = _parsing.Option(('-h', '--help'))
-FLAGS_LICENSE = _parsing.Option(('--license',))
-FLAGS_MODE_TESTS = _parsing.Option(('-T', '--run-tests',))
-FLAGS_SDIST_DIR = _parsing.Option(('--sdist-dir',))
+OPTION_MODE_HELP = _parsing.Option(('-h', '--help'))
+OPTION_MODE_LICENSE = _parsing.Option(('--license',))
+OPTION_MODE_TESTS = _parsing.Option(('-T', '--run-tests',))
+OPTION_MODE_VERSION = _parsing.Option(('-V', '--version'))
+OPTION_SDIST_DIR = _parsing.Option(('--sdist-dir',))
 OPTION_VERBOSE = _parsing.Option(('-v', '--verbose'))
 
 # TODO [template]: populate with sample.json description and URL.
@@ -56,12 +56,16 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 """
 
-# This dict lets us group help strings together for easier editing.
+# This dict simplifies help-string editing by keeping help strings together
+# and using the page full width.
 HELP_STRINGS = {
     'args': """\
 zero more input values.
 """,
-    FLAGS_MODE_TESTS: """\
+    OPTION_MODE_HELP: """\
+show this help message and exit.
+""",
+    OPTION_MODE_TESTS: """\
 discover and run project tests.  Tests include unit tests and doctests.
 Running this command is for the most part equivalent to running unittest's
 command-line discover command with an appropriate -t/--start-directory value.
@@ -69,12 +73,9 @@ Option values are passed along as is to the discover command.  For info on
 the discovery options, consult the Python documentation or pass -h or --help
 as an option to this value.
 """,
-    FLAGS_SDIST_DIR: """\
+    OPTION_SDIST_DIR: """\
 the path to the source distribution directory (aka sdist) if running
 from a source checkout.  Otherwise, this option should be left out.
-""",
-    OPTION_HELP: """\
-show this help message and exit.
 """,
 }
 
@@ -155,24 +156,24 @@ def _create_parser(suppress_help_exit=False):
     # This lets one specify project resources not available in a package
     # build or install, when doing development testing.  Defaults to no
     # source directory.
-    add_arg(parser, FLAGS_SDIST_DIR, metavar='DIRECTORY', dest='sdist_dir',
+    add_arg(parser, OPTION_SDIST_DIR, metavar='DIRECTORY', dest='sdist_dir',
             action='store', default=None)
     add_arg(parser, OPTION_VERBOSE, dest='verbose', action='store_true',
             help='log verbosely.')
 
     # This group corresponds to the possible "modes" or "commands".
-    # We do not use a subparsers for this because of issue #17050:
+    # We do not use a subparsers for this because of CPython issue #17050:
     # http://bugs.python.org/issue17050
     group = parser.add_mutually_exclusive_group()
     # run_tests is None if not provided, otherwise a list.
-    add_arg(group, FLAGS_MODE_TESTS, dest='run_tests',
+    add_arg(group, OPTION_MODE_TESTS, dest='run_tests',
             nargs=argparse.REMAINDER)
-    add_arg(group, FLAGS_LICENSE, dest='license_mode', action='store_true',
-            help='print license info to stdout.')
-    add_arg(group, ('-V', '--version'), dest='version_mode',
+    add_arg(group, OPTION_MODE_LICENSE, dest='license_mode',
+            action='store_true', help='print license info to stdout.')
+    add_arg(group, OPTION_MODE_VERSION, dest='version_mode',
             action='store_true', help='print version info to stdout.')
     # We add help manually for more control.
     help_action = "store_true" if suppress_help_exit else "help"
-    add_arg(group, OPTION_HELP, action=help_action)
+    add_arg(group, OPTION_MODE_HELP, action=help_action)
 
     return parser
