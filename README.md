@@ -28,7 +28,7 @@ for more information about this project.
 
 A minimal sample usage looks like--
 
-    $ python runpizza.py hello crazy world
+    $ pizza hello crazy world
     3
 
 The project page and source code is on
@@ -69,13 +69,18 @@ Install It
 Test it
 -------
 
-    TODO [template]:
+    $ pizza --run-tests
 
 
 Try it
 ------
 
-    TODO [template]:
+    $ pizza hello crazy world
+    3
+
+For command-line help--
+
+    $ pizza --help
 
 
 Hack it
