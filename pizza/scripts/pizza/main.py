@@ -132,6 +132,8 @@ def _main_inner(argv, from_source):
 
     if from_source:
         # TODO [template]: expose this path calculation in a more central module.
+        # TODO [template]: do this calculation after argument parsing
+        # based on a boolean option instead of a string.
         sdist_dir = os.path.join(pizza_dir, os.pardir)
         argv[1:1] = ['--sdist-dir', sdist_dir]
         start_dir = sdist_dir

@@ -18,6 +18,7 @@ OPTION_MODE_HELP = _parsing.Option(('-h', '--help'))
 OPTION_MODE_LICENSE = _parsing.Option(('--license',))
 OPTION_MODE_TESTS = _parsing.Option(('-T', '--run-tests',))
 OPTION_MODE_VERSION = _parsing.Option(('-V', '--version'))
+# TODO: rename to --sdist.
 OPTION_SDIST_DIR = _parsing.Option(('--sdist-dir',))
 OPTION_VERBOSE = _parsing.Option(('-v', '--verbose'))
 
@@ -152,6 +153,8 @@ def _create_parser(suppress_help_exit=False):
     # as appropriate.
     # TODO [template]: fix the help message.
     add_arg(parser, 'args', metavar=METAVAR_ARG_VALUE, nargs='*')
+    # TODO: change this to a bool and calculate the path.
+    #
     # This argument is the path to a source checkout or source distribution.
     # This lets one specify project resources not available in a package
     # build or install, when doing development testing.  Defaults to no
