@@ -18,8 +18,7 @@ OPTION_MODE_HELP = _parsing.Option(('-h', '--help'))
 OPTION_MODE_LICENSE = _parsing.Option(('--license',))
 OPTION_MODE_TESTS = _parsing.Option(('-T', '--run-tests',))
 OPTION_MODE_VERSION = _parsing.Option(('-V', '--version'))
-# TODO: rename to --sdist.
-OPTION_SDIST_DIR = _parsing.Option(('--sdist-dir',))
+OPTION_SDIST_DIR = _parsing.Option(('--sdist',))
 OPTION_VERBOSE = _parsing.Option(('-v', '--verbose'))
 
 # TODO [template]: populate with sample.json description and URL.
@@ -75,8 +74,10 @@ the discovery options, consult the Python documentation or pass -h or --help
 as an option to this value.
 """,
     OPTION_SDIST_DIR: """\
-the path to the source distribution directory (aka sdist) if running
-from a source checkout.  Otherwise, this option should be left out.
+whether to assume the command is being run from a source distribution
+(e.g. an sdist or Git repository).  Running with this option may look, for
+example, for certain resources available only in a source checkout.
+Defaults to false.
 """,
 }
 
@@ -153,14 +154,8 @@ def _create_parser(suppress_help_exit=False):
     # as appropriate.
     # TODO [template]: fix the help message.
     add_arg(parser, 'args', metavar=METAVAR_ARG_VALUE, nargs='*')
-    # TODO: change this to a bool and calculate the path.
-    #
-    # This argument is the path to a source checkout or source distribution.
-    # This lets one specify project resources not available in a package
-    # build or install, when doing development testing.  Defaults to no
-    # source directory.
-    add_arg(parser, OPTION_SDIST_DIR, metavar='DIRECTORY', dest='sdist_dir',
-            action='store', default=None)
+    add_arg(parser, OPTION_SDIST_DIR, dest='is_sdist', action='store_true',
+            default=False)
     add_arg(parser, OPTION_VERBOSE, dest='verbose', action='store_true',
             help='log verbosely.')
 

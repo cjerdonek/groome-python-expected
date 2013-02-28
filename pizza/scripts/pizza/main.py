@@ -130,20 +130,22 @@ def _main_inner(argv, from_source):
 
     pizza_dir = os.path.dirname(pizza.__file__)
 
-    if from_source:
-        # TODO [template]: expose this path calculation in a more central module.
-        # TODO [template]: do this calculation after argument parsing
-        # based on a boolean option instead of a string.
-        sdist_dir = os.path.join(pizza_dir, os.pardir)
-        argv[1:1] = ['--sdist-dir', sdist_dir]
-        start_dir = sdist_dir
-    else:
-        start_dir = pizza_dir
-
     log.debug("argv: %r" % argv)
     ns = argparsing.parse_args(argv)
     log.debug("parsed args: %r" % ns)
     log.debug("cwd: %r" % os.getcwd())
+
+    if from_source:
+        ns.is_dist = True
+
+    if ns.is_sdist:
+        # TODO [template]: consider exposing this path calculation in a
+        # central module as a function to get the project directory.
+        #
+        # Running tests from the project directory also runs setup tests.
+        start_dir = os.path.join(pizza_dir, os.pardir)
+    else:
+        start_dir = pizza_dir
 
     if ns.run_tests is not None:  # Then the value is a list.
         test_argv = ([argv[0], 'discover', '--start-directory', start_dir] +
