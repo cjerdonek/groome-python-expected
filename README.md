@@ -83,47 +83,18 @@ For command-line help--
     $ pizza --help
 
 
-Hack it
--------
+Contributing
+------------
 
-TODO [template]: merge this section with the "For Contributors" section.  We
-may want to move this information to developing.md.
-
-This section describes how to modify and contribute to Pizza.  In particular,
-it shows you the way around and how to interact with Pizza from a source
-checkout.
-
-To run the main `pizza` script from source:
-
-    $ python runpizza.py tomatoes garlic
-    input: tomatoes, garlic
-
-This script is essentially a development convenience for running:
-
-    $ python -m pizza.scripts.pizza ...
-
-which is in turn equivalent to the command above that
-To get help and see all options:
-
-    $ python runpizza.py --help
-
-To run project tests (which are already stubbed out):
-
-    $ python runpizza.py --run-tests
-
-
-For Contributors
----------------
-
-For guidance on working with the Pizza code base, consult the `developing.md`
-file in the `docs` folder of a source distribution.
+For guidance on contributing to or modifying the Pizza code base, consult the
+file [`docs/developing.md`](docs/developing.md).
 
 
 For Maintainers
 ---------------
 
 For instructions on releasing Pizza and on how to use `setup.py`, consult
-the `releasing.md` file in the `docs` folder of a source distribution.
+the file [`docs/releasing.md`](docs/releasing.md).
 
 
 Author
