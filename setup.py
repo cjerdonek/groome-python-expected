@@ -4,9 +4,9 @@
 """
 Standard Python setup script to support distribution-related tasks.
 
-For instructions on releasing Pizza and on how to use this script, consult
-the `releasing.md` file in the `docs` folder of a source distribution.  For
-installation and usage instructions, consult the README or the project page:
+For instructions on releasing Pizza and on how to use this script, consult the
+file `docs/releasing.md` of a source distribution.  For installation and usage
+instructions, consult the README or the project page:
 
 https://github.com/cjerdonek/groome-python-expected
 
