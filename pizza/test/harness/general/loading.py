@@ -111,7 +111,7 @@ class TestLoader(unittest.TestLoader):
 Due to a bug in Python's unittest module, the AttributeError may be masking
 an ImportError in the module being processed.
 -->%s""" % (repr(name), str(err))
-                # TODO [template]: add to the existing exception instead of
+                # XXX: add to the existing exception instead of
                 # raising a new one.
                 raise Exception(msg)
             suites.append(suite)

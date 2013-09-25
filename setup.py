@@ -49,7 +49,7 @@ import sys
 # is of course okay to import from pizza_setup.
 import pizza_setup.utils as utils
 
-# TODO [template]: explore whether I can support distutils (at least for installers).
+# XXX: explore whether I can support distutils (at least for installers).
 #
 # Whether to use Distribute (or setuptools if not available) over distutils.
 # This boolean is temporary for more convenient testing/experimentation.
@@ -285,7 +285,7 @@ def get_extra_args():
 
     """
     extra = {}
-    # TODO [template]: document that Distribute is necessary if using Python 3 and
+    # XXX: document that Distribute is necessary if using Python 3 and
     # possibly include this in the exception message.
     # Check the Python version instead of whether we're using Distribute or
     # setuptools because the former is less brittle.
@@ -328,7 +328,7 @@ def main(sys_argv):
     # MANIFEST.in file).  Also, we currently include the test subpackages.
     # For information on excluding test packages, see:
     # http://packages.python.org/distribute/setuptools.html#using-find-packages
-    # TODO [template]: add a tox test to check that pizza_setup is not installed.
+    # XXX: add a tox test to check that pizza_setup is not installed.
     packages = setuptools.find_packages(exclude=['pizza_setup',
                                                  'pizza_setup.*'])
 

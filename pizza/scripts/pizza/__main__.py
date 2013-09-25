@@ -1,5 +1,5 @@
 """
-TODO [template]: add a docstring.
+XXX: add a docstring.
 
 """
 

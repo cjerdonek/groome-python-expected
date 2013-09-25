@@ -165,7 +165,7 @@ class Differencer(object):
         return results
 
 
-# TODO [template]: consider moving this formatting function to setup.py.
+# XXX: consider moving this formatting function to setup.py.
 def describe_differences(project_dir, sdist_dir, skip=None, indent='  '):
     """
     Describe the differences between the project and sdist directories.

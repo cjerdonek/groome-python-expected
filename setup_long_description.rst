@@ -94,7 +94,7 @@ For command-line help--
 Hack it
 -------
 
-TODO [template]: merge this section with the "For Contributors" section.
+XXX: merge this section with the "For Contributors" section.
 We may want to move this information to developing.md.
 
 This section describes how to modify and contribute to Pizza. In

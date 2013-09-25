@@ -132,17 +132,17 @@ are found needed.
 
 #### 3.1.1 Review issues
 
-TODO [template]:
+XXX:
 
 
 #### 3.1.2 Update HISTORY file
 
-TODO [template]:
+XXX:
 
 
 #### 3.1.3 Double-check the `sdist`
 
-TODO [template]:
+XXX:
 
 Regarding the manifest file, MANIFEST.in is a file that tells setup.py
 what files to include in your source distribution, in addition to any
@@ -167,7 +167,7 @@ the project directory differs from the created sdist directory.
 
 #### 3.1.4. Bump version number
 
-TODO [template]:
+XXX:
 
 For versioning your project, you may want to consider semantic versioning:
 http://semver.org.
@@ -205,12 +205,12 @@ You can also view the long description file on GitHub as a sanity check.
 
 #### 3.1.6. Make sure tests pass
 
-TODO [template]:
+XXX:
 
 
 ### 3.2. Merge to release branch
 
-TODO [template]:
+XXX:
 
 * Discuss master/development
 * Okay to make changes after this

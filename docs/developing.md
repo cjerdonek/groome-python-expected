@@ -9,7 +9,7 @@ For instructions on installing or using the application, consult the README or
 For instructions on releasing the application to PyPI and on how to use
 `setup.py`, consult the `releasing.md` file in the `docs` folder.
 
-TODO [template]: add instructions for previewing a Markdown file.
+XXX: add instructions for previewing a Markdown file.
 
 This section describes how to modify and contribute to Pizza.  In particular,
 it shows you the way around and how to interact with Pizza from a source
@@ -33,5 +33,5 @@ To run project tests (which are already stubbed out):
 
     $ python runpizza.py --run-tests
 
-TODO [template]: (what does [template] mean, by the way?) add Tox instructions
+XXX: (what does [template] mean, by the way?) add Tox instructions
 after checking whether they're present anywhere already.

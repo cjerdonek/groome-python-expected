@@ -22,10 +22,10 @@ EXIT_STATUS_USAGE_ERROR = 2
 
 LOGGING_LEVEL_DEFAULT = logging.INFO
 
-# TODO [template]: should this be made public with a better name?
+# XXX: should this be made public with a better name?
 log = logging.getLogger("pizza.script")
 # Loggers that should display during testing.
-# TODO [template]: make this test_loggers instead of test_logger_names.
+# XXX: make this test_loggers instead of test_logger_names.
 test_logger_names = [logger.name for logger in (log, harness.log)]
 
 
@@ -35,9 +35,9 @@ def error(msg, add_trace=False):
     log.error(msg)
 
 
-# TODO [template]: make this testable.
-# TODO [template]: finish documenting this method.
-# TODO [template]: improve parameter names.
+# XXX: make this testable.
+# XXX: finish documenting this method.
+# XXX: improve parameter names.
 def _configure_logging(level=None, stream=None, is_testing=False,
                        is_verbose=False):
     """
@@ -117,7 +117,7 @@ def configure_logging(argv, stream=None):
         if ns.run_tests:
             is_testing = True
 
-    # TODO [template]: reconsider the argument names here.
+    # XXX: reconsider the argument names here.
     _configure_logging(stream=stream, is_testing=is_testing,
                        is_verbose=is_verbose)
 
@@ -139,7 +139,7 @@ def _main_inner(argv, from_source):
         ns.is_dist = True
 
     if ns.is_sdist:
-        # TODO [template]: consider exposing this path calculation in a
+        # XXX: consider exposing this path calculation in a
         # central module as a function to get the project directory.
         #
         # Running tests from the project directory also runs setup tests.
@@ -162,7 +162,7 @@ def _main(argv=None, from_source=False):
         argv = sys.argv
 
     verbose = configure_logging(argv, stream=sys.stderr)
-    # TODO [template]: also handle KeyboardInterrupt?
+    # XXX: also handle KeyboardInterrupt?
     try:
         _main_inner(argv, from_source)
         status = EXIT_STATUS_SUCCESS

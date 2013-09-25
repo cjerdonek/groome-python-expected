@@ -21,7 +21,7 @@ OPTION_MODE_VERSION = _parsing.Option(('-V', '--version'))
 OPTION_SDIST_DIR = _parsing.Option(('--sdist',))
 OPTION_VERBOSE = _parsing.Option(('-v', '--verbose'))
 
-# TODO [template]: populate with sample.json description and URL.
+# XXX: populate with sample.json description and URL.
 DESCRIPTION = """\
 Make a pizza!
 """
@@ -150,9 +150,9 @@ def _create_parser(suppress_help_exit=False):
             option = (option, )
         obj.add_argument(*option, help=help, **kwargs)
 
-    # TODO [template]: incorporate the METAVAR names into the help messages,
+    # XXX: incorporate the METAVAR names into the help messages,
     # as appropriate.
-    # TODO [template]: fix the help message.
+    # XXX: fix the help message.
     add_arg(parser, 'args', metavar=METAVAR_ARG_VALUE, nargs='*')
     add_arg(parser, OPTION_SDIST_DIR, dest='is_sdist', action='store_true',
             default=False)

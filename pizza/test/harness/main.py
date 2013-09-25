@@ -27,7 +27,7 @@ class TestConfig(object):
 
 def run_tests(argv):
     log.info("run_tests argv: %r" % argv)
-    # TODO [template]: pass the correct directory.
+    # XXX: pass the correct directory.
     config = TestConfig(temp_dir="TODO")
     loader = loading.TestLoader()
     loader.test_config = config
