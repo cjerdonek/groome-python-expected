@@ -86,15 +86,8 @@ For command-line help--
 Contributing
 ------------
 
-For guidance on contributing to or modifying the Pizza code base, consult the
-file [`docs/developing.md`](docs/developing.md).
-
-
-For Maintainers
----------------
-
-For instructions on releasing Pizza and on how to use `setup.py`, consult
-the file [`docs/releasing.md`](docs/releasing.md).
+To contribute to or modify the Pizza code base, consult
+[`docs/developing.md`](docs/developing.md).
 
 
 Author

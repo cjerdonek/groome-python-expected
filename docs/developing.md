@@ -1,5 +1,5 @@
-Maintaining Pizza
-=================
+Contributing to Pizza
+=====================
 
 This document contains guidance on maintaining and contributing to Pizza.
 The project README also contains some of this information.
@@ -35,3 +35,10 @@ To run project tests (which are already stubbed out):
 
 XXX: (what does [template] mean, by the way?) add Tox instructions
 after checking whether they're present anywhere already.
+
+
+For Maintainers
+---------------
+
+For instructions on releasing Pizza and on how to use `setup.py`, consult
+the file [`docs/releasing.md`](docs/releasing.md).
