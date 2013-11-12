@@ -33,8 +33,8 @@ To run project tests (which are already stubbed out):
 
     $ python runpizza.py --run-tests
 
-XXX: (what does [template] mean, by the way?) add Tox instructions
-after checking whether they're present anywhere already.
+XXX: add Tox instructions after checking whether they're present anywhere
+already.
 
 
 For Maintainers

@@ -4,6 +4,7 @@ Exposes the function that the run_test command-line option should call.
 """
 
 import logging
+import os
 import unittest
 
 import pizza.test
@@ -27,6 +28,7 @@ class TestConfig(object):
 
 def run_tests(argv):
     log.info("run_tests argv: %r" % argv)
+    log.info("PYTHONHASHSEED: %r" % os.getenv('PYTHONHASHSEED'))
     # XXX: pass the correct directory.
     config = TestConfig(temp_dir="TODO")
     loader = loading.TestLoader()
